@@ -39,7 +39,16 @@ namespace HomeBudget2.Models
         public DbSet<SubCategory> SubCategories { get; set; }
 
 
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<BankAccount>().Property(bankAcc => bankAcc.AccountName).IsRequired();
+
+            modelBuilder.Entity<SubCategory>().Property(SubCat => SubCat.SubCategoryName).IsRequired();
+
+            modelBuilder.Entity<Category>().Property(Cat => Cat.CategoryName).IsRequired();
 
 
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

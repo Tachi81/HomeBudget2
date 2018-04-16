@@ -199,6 +199,10 @@
     <Compile Include="Migrations\201804160707185_createDB.Designer.cs">
       <DependentUpon>201804160707185_createDB.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201804160749344_AddedModels.cs" />
+    <Compile Include="Migrations\201804160749344_AddedModels.Designer.cs">
+      <DependentUpon>201804160749344_AddedModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BankAccount.cs" />
@@ -289,6 +293,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201804160707185_createDB.resx">
       <DependentUpon>201804160707185_createDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804160749344_AddedModels.resx">
+      <DependentUpon>201804160749344_AddedModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
