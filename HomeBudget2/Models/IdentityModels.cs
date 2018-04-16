@@ -29,5 +29,17 @@ namespace HomeBudget2.Models
         {
             return new ApplicationDbContext();
         }
+
+        public DbSet<BankAccount> BankAccounts { get; set; }
+        public DbSet<FinancialOperation> FinancialOperations { get; set; }
+        public DbSet<SourceOMoney> SourcesOMoney { get; set; }
+
+        public DbSet<DestinationOfMoney> DestinationsOfMoney { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<SubCategory> SubCategories { get; set; }
+
+
+
+
     }
 }
