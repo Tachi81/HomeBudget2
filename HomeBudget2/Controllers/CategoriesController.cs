@@ -6,10 +6,10 @@ using System.Web.Mvc;
 
 namespace HomeBudget2.Controllers
 {
+    [Authorize]
     public class CategoriesController : Controller
     {
-
-
+        
         private readonly ICategoryRepository _categoryRepository;
 
         public CategoriesController(ICategoryRepository categoryRepository)
@@ -22,6 +22,12 @@ namespace HomeBudget2.Controllers
         public ActionResult ExpenseCategoryIndex()
         {
             var categories = _categoryRepository.GetWhere(cat => cat.Id > 0 && cat.IsExpense);
+            if (categories.Count == 0)
+            {
+                Category category = new Category();
+                category.IsExpense = true;
+                categories.Add(category);
+            }
             return View("Index", categories);
         }
 
@@ -29,6 +35,12 @@ namespace HomeBudget2.Controllers
         public ActionResult IncomeCategoryIndex()
         {
             var categories = _categoryRepository.GetWhere(cat => cat.Id > 0 && cat.IsIncome);
+            if (categories.Count == 0)
+            {
+                Category category = new Category();
+                category.IsIncome = true;
+                categories.Add(category);
+            }
             return View("Index", categories);
         }
 
@@ -74,7 +86,11 @@ namespace HomeBudget2.Controllers
             if (ModelState.IsValid)
             {
                 _categoryRepository.Create(category);
-                return RedirectToAction("ExpenseCategoryIndex");
+                if (category.IsExpense)
+                {
+                    return RedirectToAction("ExpenseCategoryIndex");
+                }
+                return RedirectToAction("IncomeCategoryIndex","Categories");
             }
 
             return View("Create", category);

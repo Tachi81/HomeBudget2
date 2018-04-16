@@ -1,41 +1,41 @@
 ﻿@using HomeBudget2.Models
 @model IEnumerable<HomeBudget2.Models.Category>
+
+
 @{
-    Category first = null;
-    foreach (var category in Model)
-    {
-        first = category;
-        break;
-    }
+    Category firstCategoryfromTheList = Model.First();
 }
-@if (first == null)
-{
-    <h2> Categories</h2>
-}
-else if (first.IsIncome)
-{
-    <h2>Income Categories</h2>
-}
-else
+
+@if (firstCategoryfromTheList.IsExpense)
 {
     <h2>Expense Categorie</h2>
 }
+@if (firstCategoryfromTheList.IsIncome)
+{
+    <h2>Income Categories</h2>
+}
+
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@if (firstCategoryfromTheList.IsExpense)
+{
+    <p>
+        @Html.ActionLink("Create New Expense Category", "CreateExpenseCategory", "Categories")
+    </p>
+}
+@if (firstCategoryfromTheList.IsIncome)
+{
+    <p>
+        @Html.ActionLink("Create New IncomeCategory", "CreateIncomeCategory")
+    </p>
+}
+
 <table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.CategoryName)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsExpense)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsIncome)
-        </th>
+       
         <th></th>
     </tr>
 
@@ -45,12 +45,7 @@ else
             <td>
                 @Html.DisplayFor(modelItem => item.CategoryName)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsExpense)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsIncome)
-            </td>
+           
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                 @Html.ActionLink("Details", "Details", new { id = item.Id }) |

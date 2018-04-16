@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace HomeBudget2.Controllers
 {
+    [Authorize]
     public class BankAccountsController : Controller
     {
         private readonly IBankAccountRepository _bankAccountRepository;
