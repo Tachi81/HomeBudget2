@@ -1,0 +1,38 @@
+﻿@model HomeBudget2.ViewModels.BankAccountViewModel
+
+<h2>Details</h2>
+
+<div>
+    <h4>BankAccount</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BankAccount.InitialBalance)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BankAccount.InitialBalance)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BankAccount.Balance)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BankAccount.Balance)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BankAccount.AccountName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BankAccount.AccountName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.BankAccount.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
