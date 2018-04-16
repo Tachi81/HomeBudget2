@@ -44,6 +44,8 @@ namespace HomeBudget2
         {
             //kernel.Bind<IRepo>().ToMethod(ctx => new Repo("Ninject Rocks!"));
             kernel.Bind<IBankAccountRepository>().To<BankAccountRepository>();
+            kernel.Bind<ICategoryRepository>().To<CategoryRepository>();
+            kernel.Bind<ISubCategoryRepository>().To<SubCategoryRepository>();
         }
     }
 }
