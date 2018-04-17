@@ -180,7 +180,7 @@ namespace HomeBudget2.Controllers
         {
             SubCategoryViewModel subCategoryVm = new SubCategoryViewModel();
             subCategoryVm.ListOfSubCategories =
-                _subCategoryRepository.GetWhereWithIncludes(subCat => subCat.Id > 0 && isSubCategoryAnExpenseSubCat ? subCat.IsExpense : subCat.IsIncome);
+                _subCategoryRepository.GetWhereWithIncludes(subCat => subCat.Id > 0 && isSubCategoryAnExpenseSubCat ? subCat.IsExpense : subCat.IsIncome, subcat => subcat.Category);
             if (subCategoryVm.ListOfSubCategories.Count == 0)
             {
                 SubCategory subCategory = new SubCategory();

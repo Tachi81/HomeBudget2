@@ -1,13 +1,17 @@
 ﻿@model HomeBudget2.ViewModels.SubCategoryViewModel
-
-@{
-    ViewBag.Title = "Details";
+@if (Model.SubCategory.IsExpense)
+{
+    <h2>Expense SubCategories</h2>
+}
+@if (Model.SubCategory.IsIncome)
+{
+    <h2>Income SubCategories</h2>
 }
 
-<h2>Details</h2>
+<h3>Details</h3>
 
 <div>
-    <h4>SubCategory</h4>
+   
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -46,5 +50,12 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.SubCategory.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @if (Model.SubCategory.IsExpense)
+    {
+            @Html.ActionLink("Back to List", "ExpenseSubCategoryIndex")
+    }
+    @if (Model.SubCategory.IsIncome)
+    {
+            @Html.ActionLink("Back to List", "IncomeSubCategoryIndex")
+    }
 </p>

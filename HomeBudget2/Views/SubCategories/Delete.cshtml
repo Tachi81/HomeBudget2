@@ -1,10 +1,15 @@
 ﻿@model HomeBudget2.ViewModels.SubCategoryViewModel
 
-@{
-    ViewBag.Title = "Delete";
+@if (Model.SubCategory.IsExpense)
+{
+    <h2>Expense SubCategories</h2>
+}
+@if (Model.SubCategory.IsIncome)
+{
+    <h2>Income SubCategories</h2>
 }
 
-<h2>Delete</h2>
+<h3>Delete</h3>
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
@@ -45,12 +50,20 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            @if (Model.SubCategory.IsExpense)
+            {
+                @Html.ActionLink("Back to List", "ExpenseSubCategoryIndex")
+            }
+            @if (Model.SubCategory.IsIncome)
+            {
+                @Html.ActionLink("Back to List", "IncomeSubCategoryIndex")
+            }
         </div>
     }
 </div>
