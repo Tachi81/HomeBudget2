@@ -217,6 +217,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BankAccountsController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
+    <Compile Include="Controllers\FinancialOperationsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SubCategoriesController.cs" />
     <Compile Include="DAL\Repositories\AbstractRepository.cs" />
@@ -226,6 +227,8 @@
     <Compile Include="DAL\Interfaces\ISubCategoryRepository.cs" />
     <Compile Include="DAL\Repositories\CategoryRepository.cs" />
     <Compile Include="DAL\Interfaces\ICategoryRepository.cs" />
+    <Compile Include="DAL\Repositories\FinancialOperationRepository.cs" />
+    <Compile Include="DAL\Interfaces\IFinancialOperationRepository.cs" />
     <Compile Include="DAL\Repositories\SubCategoryRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -368,6 +371,11 @@
     <Content Include="Views\Categories\Details.cshtml" />
     <Content Include="Views\Categories\Edit.cshtml" />
     <Content Include="Views\Categories\Index.cshtml" />
+    <Content Include="Views\FinancialOperations\Create.cshtml" />
+    <Content Include="Views\FinancialOperations\Delete.cshtml" />
+    <Content Include="Views\FinancialOperations\Details.cshtml" />
+    <Content Include="Views\FinancialOperations\Edit.cshtml" />
+    <Content Include="Views\FinancialOperations\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
