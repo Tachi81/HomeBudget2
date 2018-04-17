@@ -1,8 +1,14 @@
 ﻿@model HomeBudget2.Models.Category
 
-@{
-    ViewBag.Title = "Edit";
+@if (Model.IsExpense)
+{
+    <h2>Expense Categories</h2>
 }
+@if (Model.IsIncome)
+{
+    <h2>Income Categories</h2>
+}
+
 
 <h2>Edit</h2>
 
@@ -10,7 +16,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Category</h4>
         <hr />
@@ -26,26 +32,6 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.IsExpense, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsExpense)
-                    @Html.ValidationMessageFor(model => model.IsExpense, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsIncome, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsIncome)
-                    @Html.ValidationMessageFor(model => model.IsIncome, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
@@ -54,7 +40,14 @@
 }
 
 <div>
+    @if (Model.IsExpense)
+    {
     @Html.ActionLink("Back to List", "ExpenseCategoryIndex")
+    }
+    @if (Model.IsIncome)
+    {
+        @Html.ActionLink("Back to List", "IncomeCategoryIndex")
+    }
 </div>
 
 @section Scripts {

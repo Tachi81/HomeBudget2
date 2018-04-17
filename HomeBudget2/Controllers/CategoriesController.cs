@@ -9,7 +9,7 @@ namespace HomeBudget2.Controllers
     [Authorize]
     public class CategoriesController : Controller
     {
-        
+
         private readonly ICategoryRepository _categoryRepository;
 
         public CategoriesController(ICategoryRepository categoryRepository)
@@ -88,9 +88,9 @@ namespace HomeBudget2.Controllers
                 _categoryRepository.Create(category);
                 if (category.IsExpense)
                 {
-                    return RedirectToAction("ExpenseCategoryIndex");
+                    return RedirectToAction("ExpenseCategoryIndex", "Categories");
                 }
-                return RedirectToAction("IncomeCategoryIndex","Categories");
+                return RedirectToAction("IncomeCategoryIndex", "Categories");
             }
 
             return View("Create", category);
@@ -121,7 +121,11 @@ namespace HomeBudget2.Controllers
             if (ModelState.IsValid)
             {
                 _categoryRepository.Update(category);
-                return RedirectToAction("ExpenseCategoryIndex");
+                if (category.IsExpense)
+                {
+                    return RedirectToAction("ExpenseCategoryIndex", "Categories");
+                }
+                return RedirectToAction("IncomeCategoryIndex", "Categories");
             }
             return View(category);
         }

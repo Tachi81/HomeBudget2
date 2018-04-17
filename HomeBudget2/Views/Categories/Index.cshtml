@@ -1,4 +1,5 @@
 ﻿@using HomeBudget2.Models
+
 @model IEnumerable<HomeBudget2.Models.Category>
 
 
@@ -8,14 +9,14 @@
 
 @if (firstCategoryfromTheList.IsExpense)
 {
-    <h2>Expense Categorie</h2>
+    <h2>Expense Categories</h2>
 }
 @if (firstCategoryfromTheList.IsIncome)
 {
     <h2>Income Categories</h2>
 }
 
-<h2>Index</h2>
+<h3>Index</h3>
 
 @if (firstCategoryfromTheList.IsExpense)
 {

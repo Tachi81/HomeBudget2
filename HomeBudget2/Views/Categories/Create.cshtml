@@ -12,7 +12,7 @@
     }
 }
 
-<h2>Create</h2>
+<h3>Create</h3>
 
 
 @using (Html.BeginForm("Create", "Categories", FormMethod.Post))
@@ -40,20 +40,18 @@
     </div>
 }
 
+        <div>
 @{
     if (Model.IsExpense)
     {
-        <div>
             @Html.ActionLink("Back to List", "ExpenseCategoryIndex")
-        </div>
     }
     if (Model.IsIncome)
     {
-        <div>
             @Html.ActionLink("Back to List", "IncomeCategoryIndex")
-        </div>
     }
 }
+        </div>
 
 
 

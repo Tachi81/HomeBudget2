@@ -1,10 +1,16 @@
 ﻿@model HomeBudget2.Models.Category
 
-@{
-    ViewBag.Title = "Details";
+@if (Model.IsExpense)
+{
+    <h2>Expense Categories</h2>
+}
+@if (Model.IsIncome)
+{
+    <h2>Income Categories</h2>
 }
 
-<h2>Details</h2>
+
+<h3>Details</h3>
 
 <div>
     <h4>Category</h4>
@@ -38,5 +44,12 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "ExpenseCategoryIndex")
+    @if (Model.IsExpense)
+    {
+        @Html.ActionLink("Back to List", "ExpenseCategoryIndex")
+    }
+    @if (Model.IsIncome)
+    {
+        @Html.ActionLink("Back to List", "IncomeCategoryIndex")
+    }
 </p>
