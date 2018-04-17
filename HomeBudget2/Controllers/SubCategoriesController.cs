@@ -1,25 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using HomeBudget2.DAL.Interfaces;
+using HomeBudget2.Models;
+using HomeBudget2.ViewModels;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using HomeBudget2.Models;
 
 namespace HomeBudget2.Controllers
 {
     [Authorize]
     public class SubCategoriesController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ISubCategoryRepository _subCategoryRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        // GET: SubCategories
-        public ActionResult Index()
+        public SubCategoriesController(ISubCategoryRepository subCategoryRepository, ICategoryRepository categoryRepository)
         {
-            var subCategories = db.SubCategories.Include(s => s.Category);
-            return View(subCategories.ToList());
+            _subCategoryRepository = subCategoryRepository;
+            _categoryRepository = categoryRepository;
+        }
+
+        // GET: Expense SubCategories Index
+        public ActionResult ExpenseSubCategoryIndex()
+        {
+            bool isSubCategoryAnExpenseSubCat = true;
+            SubCategoryViewModel subCategoryVm = CreateSubCatVmWithListOfSubCat(isSubCategoryAnExpenseSubCat);
+            return View("Index", subCategoryVm);
+
+        }
+
+        // GET: Income SubCategories Index
+        public ActionResult IncomeSubCategoryIndex()
+        {
+            bool isSubCategoryAnExpenseSubCat = false;
+            var subCategoryVm = CreateSubCatVmWithListOfSubCat(isSubCategoryAnExpenseSubCat);
+            return View("Index", subCategoryVm);
+
         }
 
         // GET: SubCategories/Details/5
@@ -29,19 +44,32 @@ namespace HomeBudget2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SubCategory subCategory = db.SubCategories.Find(id);
-            if (subCategory == null)
+
+            SubCategoryViewModel subCategoryVm = CreateSubCategoryViewModelWithSpecificId(id);
+
+            if (subCategoryVm.SubCategory == null)
             {
                 return HttpNotFound();
             }
-            return View(subCategory);
+            return View(subCategoryVm);
         }
 
-        // GET: SubCategories/CreateExpenseSubCategory
+
+
+        // GET: SubCategories/Create Expense SubCategory
         public ActionResult CreateExpenseSubCategory()
         {
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "CategoryName");
-            return View();
+            bool isExpense = true;
+            SubCategoryViewModel subCategoryVm = CreateSubCatVmWithSubCatAndWithSelectList(isExpense);
+            return View("Create", subCategoryVm);
+        }
+
+        // GET: SubCategories/Create Income SubCategory
+        public ActionResult CreateIncomeSubCategory()
+        {
+            bool isExpense = false;
+            SubCategoryViewModel subCategoryVm = CreateSubCatVmWithSubCatAndWithSelectList(isExpense);
+            return View("Create", subCategoryVm);
         }
 
         // POST: SubCategories/Create
@@ -49,17 +77,21 @@ namespace HomeBudget2.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateExpenseSubCategory( SubCategory subCategory)
+        public ActionResult Create(SubCategoryViewModel subCategoryVm)
         {
             if (ModelState.IsValid)
             {
-                db.SubCategories.Add(subCategory);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                _subCategoryRepository.Create(subCategoryVm.SubCategory);
+                if (subCategoryVm.SubCategory.IsExpense)
+                {
+                    return RedirectToAction("ExpenseSubCategoryIndex", "SubCategories");
+                }
+                return RedirectToAction("IncomeSubCategoryIndex", "SubCategories");
             }
 
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "CategoryName", subCategory.CategoryId);
-            return View(subCategory);
+            var categories = _categoryRepository.GetWhere(category => category.Id > 0 && subCategoryVm.SubCategory.IsExpense ? category.IsExpense : category.IsIncome);
+            subCategoryVm.SelectListOfCategories = new SelectList(categories, "Id", "CategoryName");
+            return View(subCategoryVm);
         }
 
         // GET: SubCategories/Edit/5
@@ -69,13 +101,15 @@ namespace HomeBudget2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SubCategory subCategory = db.SubCategories.Find(id);
-            if (subCategory == null)
+            SubCategoryViewModel subCategoryVm = CreateSubCategoryViewModelWithSpecificId(id);
+            if (subCategoryVm.SubCategory == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "CategoryName", subCategory.CategoryId);
-            return View(subCategory);
+            var categories = _categoryRepository.GetWhere(category => category.Id > 0 && subCategoryVm.SubCategory.IsExpense ? category.IsExpense : category.IsIncome);
+            subCategoryVm.SelectListOfCategories = new SelectList(categories, "Id", "CategoryName");
+
+            return View(subCategoryVm);
         }
 
         // POST: SubCategories/Edit/5
@@ -83,16 +117,22 @@ namespace HomeBudget2.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,SubCategoryName,CategoryId,IsExpense,IsIncome")] SubCategory subCategory)
+        public ActionResult Edit(SubCategoryViewModel subCategoryVm)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(subCategory).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                _subCategoryRepository.Update(subCategoryVm.SubCategory);
+                if (subCategoryVm.SubCategory.IsExpense)
+                {
+                    return RedirectToAction("ExpenseSubCategoryIndex", "SubCategories");
+                }
+                return RedirectToAction("IncomeSubCategoryIndex", "SubCategories");
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "CategoryName", subCategory.CategoryId);
-            return View(subCategory);
+
+            var categories = _categoryRepository.GetWhere(category => category.Id > 0 && subCategoryVm.SubCategory.IsExpense ? category.IsExpense : category.IsIncome);
+            subCategoryVm.SelectListOfCategories = new SelectList(categories, "Id", "CategoryName");
+
+            return View(subCategoryVm);
         }
 
         // GET: SubCategories/Delete/5
@@ -102,12 +142,12 @@ namespace HomeBudget2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SubCategory subCategory = db.SubCategories.Find(id);
-            if (subCategory == null)
+            SubCategoryViewModel subCategoryVm = CreateSubCategoryViewModelWithSpecificId(id);
+            if (subCategoryVm.SubCategory == null)
             {
                 return HttpNotFound();
             }
-            return View(subCategory);
+            return View(subCategoryVm);
         }
 
         // POST: SubCategories/Delete/5
@@ -115,19 +155,65 @@ namespace HomeBudget2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            SubCategory subCategory = db.SubCategories.Find(id);
-            db.SubCategories.Remove(subCategory);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            SubCategoryViewModel subCategoryVm = CreateSubCategoryViewModelWithSpecificId(id);
+            _subCategoryRepository.Delete(subCategoryVm.SubCategory);
+            if (subCategoryVm.SubCategory.IsExpense)
+            {
+                return RedirectToAction("ExpenseSubCategoryIndex", "SubCategories");
+            }
+            return RedirectToAction("IncomeSubCategoryIndex", "SubCategories");
         }
 
-        protected override void Dispose(bool disposing)
+
+
+
+        private SubCategoryViewModel CreateSubCategoryViewModelWithSpecificId(int? id)
         {
-            if (disposing)
+            SubCategoryViewModel subCategoryVm = new SubCategoryViewModel();
+            subCategoryVm.SubCategory = _subCategoryRepository
+                .GetWhereWithIncludes(subCategory => subCategory.Id == id, subCategory => subCategory.Category)
+                .FirstOrDefault();
+            return subCategoryVm;
+        }
+
+        private SubCategoryViewModel CreateSubCatVmWithListOfSubCat(bool isSubCategoryAnExpenseSubCat)
+        {
+            SubCategoryViewModel subCategoryVm = new SubCategoryViewModel();
+            subCategoryVm.ListOfSubCategories =
+                _subCategoryRepository.GetWhereWithIncludes(subCat => subCat.Id > 0 && isSubCategoryAnExpenseSubCat ? subCat.IsExpense : subCat.IsIncome);
+            if (subCategoryVm.ListOfSubCategories.Count == 0)
             {
-                db.Dispose();
+                SubCategory subCategory = new SubCategory();
+                if (isSubCategoryAnExpenseSubCat)
+                {
+                    subCategory.IsExpense = true;
+                }
+                else
+                {
+                    subCategory.IsIncome = true;
+                }
+                subCategoryVm.ListOfSubCategories.Add(subCategory);
             }
-            base.Dispose(disposing);
+
+            return subCategoryVm;
+        }
+
+        private SubCategoryViewModel CreateSubCatVmWithSubCatAndWithSelectList(bool isSubCategoryAnExpenseSubCat)
+        {
+            SubCategoryViewModel subCategoryVm = new SubCategoryViewModel();
+            subCategoryVm.SubCategory = new SubCategory();
+            if (isSubCategoryAnExpenseSubCat)
+            {
+                subCategoryVm.SubCategory.IsExpense = true;
+            }
+            else
+            {
+                subCategoryVm.SubCategory.IsIncome = true;
+            }
+
+            var categories = _categoryRepository.GetWhere(category => category.Id > 0 && isSubCategoryAnExpenseSubCat ? category.IsExpense : category.IsIncome);
+            subCategoryVm.SelectListOfCategories = new SelectList(categories, "Id", "CategoryName");
+            return subCategoryVm;
         }
     }
 }

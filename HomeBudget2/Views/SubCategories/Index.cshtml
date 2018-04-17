@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HomeBudget2.Models.SubCategory>
+﻿@model HomeBudget2.ViewModels.SubCategoryViewModel
 
 @{
     ViewBag.Title = "Index";
@@ -7,26 +7,26 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "CreateExpenseSubCategory", "SubCategories")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Category.CategoryName)
+            @Html.DisplayNameFor(model => model.SubCategory.Category.CategoryName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.SubCategoryName)
+            @Html.DisplayNameFor(model => model.SubCategory.SubCategoryName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.IsExpense)
+            @Html.DisplayNameFor(model => model.SubCategory.IsExpense)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.IsIncome)
+            @Html.DisplayNameFor(model => model.SubCategory.IsIncome)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (var item in Model.ListOfSubCategories) {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Category.CategoryName)
