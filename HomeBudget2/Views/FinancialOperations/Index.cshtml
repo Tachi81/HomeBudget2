@@ -23,17 +23,17 @@
 <p>
     @if (financialOperation.IsExpense)
     {
-        @Html.ActionLink("Create New", "CreateExpense", "FinancialOperations")
+        @Html.ActionLink("Create New Expense", "CreateExpense", "FinancialOperations")
 
     }
     @if (financialOperation.IsIncome)
     {
-        @Html.ActionLink("Create New", "CreateIncome", "FinancialOperations")
+        @Html.ActionLink("Create New Income", "CreateIncome", "FinancialOperations")
 
     }
     @if (financialOperation.IsTransfer)
     {
-        @Html.ActionLink("Create New", "CreateTransfer", "FinancialOperations")
+        @Html.ActionLink("Create New Transfer", "CreateTransfer", "FinancialOperations")
 
     }
 </p>
