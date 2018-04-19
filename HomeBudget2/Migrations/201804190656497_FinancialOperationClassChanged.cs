@@ -1,8 +1,7 @@
 namespace HomeBudget2.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class FinancialOperationClassChanged : DbMigration
     {
         public override void Up()
@@ -22,7 +21,7 @@ namespace HomeBudget2.Migrations
             AddColumn("dbo.FinancialOperations", "BankAccountId", c => c.Int());
             AddColumn("dbo.FinancialOperations", "SubCategoryId", c => c.Int());
             AddColumn("dbo.FinancialOperations", "TargetBankAccountId", c => c.Int());
-            AddColumn("dbo.FinancialOperations", "SourceOMoney", c => c.String());
+            AddColumn("dbo.FinancialOperations", "SourceOfMoney", c => c.String());
             AddColumn("dbo.FinancialOperations", "DestinationOfMoney", c => c.String());
             CreateIndex("dbo.FinancialOperations", "BankAccountId");
             CreateIndex("dbo.FinancialOperations", "SubCategoryId");
@@ -36,29 +35,29 @@ namespace HomeBudget2.Migrations
             DropTable("dbo.DestinationOfMoneys");
             DropTable("dbo.SourceOMoneys");
         }
-        
+
         public override void Down()
         {
             CreateTable(
                 "dbo.SourceOMoneys",
                 c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        SubCategoryId = c.Int(),
-                        BankAccountId = c.Int(),
-                    })
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    SubCategoryId = c.Int(),
+                    BankAccountId = c.Int(),
+                })
                 .PrimaryKey(t => t.Id);
-            
+
             CreateTable(
                 "dbo.DestinationOfMoneys",
                 c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        SubCategoryId = c.Int(),
-                        BankAccountId = c.Int(),
-                    })
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    SubCategoryId = c.Int(),
+                    BankAccountId = c.Int(),
+                })
                 .PrimaryKey(t => t.Id);
-            
+
             AddColumn("dbo.FinancialOperations", "DestinationOfMoneyId", c => c.Int(nullable: false));
             AddColumn("dbo.FinancialOperations", "SourceOMoneyId", c => c.Int(nullable: false));
             AddColumn("dbo.FinancialOperations", "DescriptionOfOperation", c => c.String());
@@ -69,7 +68,7 @@ namespace HomeBudget2.Migrations
             DropIndex("dbo.FinancialOperations", new[] { "SubCategoryId" });
             DropIndex("dbo.FinancialOperations", new[] { "BankAccountId" });
             DropColumn("dbo.FinancialOperations", "DestinationOfMoney");
-            DropColumn("dbo.FinancialOperations", "SourceOMoney");
+            DropColumn("dbo.FinancialOperations", "SourceOfMoney");
             DropColumn("dbo.FinancialOperations", "TargetBankAccountId");
             DropColumn("dbo.FinancialOperations", "SubCategoryId");
             DropColumn("dbo.FinancialOperations", "BankAccountId");

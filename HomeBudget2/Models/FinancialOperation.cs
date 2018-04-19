@@ -12,10 +12,10 @@ namespace HomeBudget2.Models
 
         public int? BankAccountId { get; set; }
         public int? SubCategoryId { get; set; }
-        
+
         public int? TargetBankAccountId { get; set; }
 
-        public string SourceOMoney { get; set; }
+        public string SourceOfMoney { get; set; }
         public string DestinationOfMoney { get; set; }
 
 

@@ -245,6 +245,10 @@
     <Compile Include="Migrations\201804190656497_FinancialOperationClassChanged.Designer.cs">
       <DependentUpon>201804190656497_FinancialOperationClassChanged.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201804190954076_FinancialOperationClassChanged1.cs" />
+    <Compile Include="Migrations\201804190954076_FinancialOperationClassChanged1.Designer.cs">
+      <DependentUpon>201804190954076_FinancialOperationClassChanged1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BankAccount.cs" />
@@ -406,6 +410,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804190656497_FinancialOperationClassChanged.resx">
       <DependentUpon>201804190656497_FinancialOperationClassChanged.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804190954076_FinancialOperationClassChanged1.resx">
+      <DependentUpon>201804190954076_FinancialOperationClassChanged1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
