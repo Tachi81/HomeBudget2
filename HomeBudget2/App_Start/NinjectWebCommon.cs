@@ -43,6 +43,7 @@ namespace HomeBudget2
         private static void RegisterServices(IKernel kernel)
         {
             //kernel.Bind<IRepo>().ToMethod(ctx => new Repo("Ninject Rocks!"));
+            kernel.Bind<IFinancialOperationRepository>().To<FinancialOperationRepository>();
             kernel.Bind<IBankAccountRepository>().To<BankAccountRepository>();
             kernel.Bind<ICategoryRepository>().To<CategoryRepository>();
             kernel.Bind<ISubCategoryRepository>().To<SubCategoryRepository>();

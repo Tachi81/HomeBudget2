@@ -1,93 +1,88 @@
-﻿@model IEnumerable<HomeBudget2.Models.FinancialOperation>
-
+﻿@using HomeBudget2.Models
+@model HomeBudget2.ViewModels.FinancialOperationViewModel
 @{
-    ViewBag.Title = "Index";
+    FinancialOperation financialOperation = Model.FinancialOperation;
 }
 
-<h2>Index</h2>
+@if (financialOperation.IsExpense)
+{
+    <h2>Expenses</h2>
+}
+@if (financialOperation.IsIncome)
+{
+    <h2>Incomes</h2>
+
+}
+@if (financialOperation.IsTransfer)
+{
+    <h2>Transfers</h2>
+
+}
+<h3>Index</h3>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @if (financialOperation.IsExpense)
+    {
+        @Html.ActionLink("Create New", "CreateExpense", "FinancialOperations")
+
+    }
+    @if (financialOperation.IsIncome)
+    {
+        @Html.ActionLink("Create New", "CreateIncome", "FinancialOperations")
+
+    }
+    @if (financialOperation.IsTransfer)
+    {
+        @Html.ActionLink("Create New", "CreateTransfer", "FinancialOperations")
+
+    }
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.BankAccount.AccountName)
+            @Html.DisplayNameFor(model => model.FinancialOperation.SourceOfMoney)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.SubCategory.SubCategoryName)
+            @Html.DisplayNameFor(model => model.FinancialOperation.DestinationOfMoney)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TargetBankAccount.AccountName)
+            @Html.DisplayNameFor(model => model.FinancialOperation.AmountOfMoney)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.AmountOfMoney)
+            @Html.DisplayNameFor(model => model.FinancialOperation.DateTime)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DateTime)
+            @Html.DisplayNameFor(model => model.FinancialOperation.Note)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Note)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SourceOMoney)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DestinationOfMoney)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsTransfer)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsExpense)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsIncome)
-        </th>
+
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.BankAccount.AccountName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SubCategory.SubCategoryName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TargetBankAccount.AccountName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AmountOfMoney)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Note)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SourceOMoney)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DestinationOfMoney)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsTransfer)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsExpense)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsIncome)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model.ListOfFinancialOperations)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SourceOfMoney)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DestinationOfMoney)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountOfMoney)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Note)
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
 
 </table>

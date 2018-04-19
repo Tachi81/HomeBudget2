@@ -1,112 +1,115 @@
-﻿@model HomeBudget2.Models.FinancialOperation
-
+﻿@using HomeBudget2.Models
+@model HomeBudget2.ViewModels.FinancialOperationViewModel
 @{
-    ViewBag.Title = "Delete";
+    FinancialOperation financialOperation = Model.FinancialOperation;
 }
 
-<h2>Delete</h2>
+@if (financialOperation.IsExpense)
+{
+    <h2>Expense</h2>
+}
+@if (financialOperation.IsIncome)
+{
+    <h2>Income</h2>
+
+}
+@if (financialOperation.IsTransfer)
+{
+    <h2>Transfer</h2>
+
+}
+<h3>Delete</h3>
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>FinancialOperation</h4>
+    
     <hr />
     <dl class="dl-horizontal">
+
         <dt>
-            @Html.DisplayNameFor(model => model.BankAccount.AccountName)
+            @Html.DisplayNameFor(model => model.FinancialOperation.SourceOfMoney)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.BankAccount.AccountName)
+            @Html.DisplayFor(model => model.FinancialOperation.SourceOfMoney)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.SubCategory.SubCategoryName)
+            @Html.DisplayNameFor(model => model.FinancialOperation.AmountOfMoney)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.SubCategory.SubCategoryName)
+            @Html.DisplayFor(model => model.FinancialOperation.AmountOfMoney)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TargetBankAccount.AccountName)
+            @Html.DisplayNameFor(model => model.FinancialOperation.DestinationOfMoney)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.TargetBankAccount.AccountName)
+            @Html.DisplayFor(model => model.FinancialOperation.DestinationOfMoney)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.AmountOfMoney)
+            @Html.DisplayNameFor(model => model.FinancialOperation.DateTime)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.AmountOfMoney)
+            @Html.DisplayFor(model => model.FinancialOperation.DateTime)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.DateTime)
+            @Html.DisplayNameFor(model => model.FinancialOperation.Note)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DateTime)
+            @Html.DisplayFor(model => model.FinancialOperation.Note)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Note)
+            @Html.DisplayNameFor(model => model.FinancialOperation.IsTransfer)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Note)
+            @Html.DisplayFor(model => model.FinancialOperation.IsTransfer)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.SourceOMoney)
+            @Html.DisplayNameFor(model => model.FinancialOperation.IsExpense)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.SourceOMoney)
+            @Html.DisplayFor(model => model.FinancialOperation.IsExpense)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.DestinationOfMoney)
+            @Html.DisplayNameFor(model => model.FinancialOperation.IsIncome)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DestinationOfMoney)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsTransfer)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsTransfer)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsExpense)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsExpense)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsIncome)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsIncome)
+            @Html.DisplayFor(model => model.FinancialOperation.IsIncome)
         </dd>
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            @if (Model.FinancialOperation.IsExpense)
+            {
+                @Html.ActionLink("Back to List", "ExpensesIndex")
+            }
+            @if (Model.FinancialOperation.IsIncome)
+            {
+                @Html.ActionLink("Back to List", "IncomesIndex")
+            }
+            @if (Model.FinancialOperation.IsTransfer)
+            {
+                @Html.ActionLink("Back to List", "TransfersIndex")
+            }
         </div>
     }
 </div>

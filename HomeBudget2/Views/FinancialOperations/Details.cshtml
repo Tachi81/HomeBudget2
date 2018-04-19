@@ -1,5 +1,4 @@
-﻿@model HomeBudget2.Models.FinancialOperation
-
+﻿@model HomeBudget2.ViewModels.FinancialOperationViewModel
 @{
     ViewBag.Title = "Details";
 }
@@ -7,108 +6,87 @@
 <h2>Details</h2>
 
 <div>
-    <h4>FinancialOperation</h4>
+   
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.BankAccount.AccountName)
+            @Html.DisplayNameFor(model => model.FinancialOperation.SourceOfMoney)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.BankAccount.AccountName)
+            @Html.DisplayFor(model => model.FinancialOperation.SourceOfMoney)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.FinancialOperation.AmountOfMoney)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FinancialOperation.AmountOfMoney)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.SubCategory.Category.CategoryName)
+            @Html.DisplayNameFor(model => model.FinancialOperation.DestinationOfMoney)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.SubCategory.Category.CategoryName)
+            @Html.DisplayFor(model => model.FinancialOperation.DestinationOfMoney)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.FinancialOperation.DateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FinancialOperation.DateTime)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.SubCategory.SubCategoryName)
+            @Html.DisplayNameFor(model => model.FinancialOperation.Note)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.SubCategory.SubCategoryName)
+            @Html.DisplayFor(model => model.FinancialOperation.Note)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TargetBankAccount.AccountName)
+            @Html.DisplayNameFor(model => model.FinancialOperation.IsTransfer)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.TargetBankAccount.AccountName)
+            @Html.DisplayFor(model => model.FinancialOperation.IsTransfer)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.AmountOfMoney)
+            @Html.DisplayNameFor(model => model.FinancialOperation.IsExpense)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.AmountOfMoney)
+            @Html.DisplayFor(model => model.FinancialOperation.IsExpense)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.DateTime)
+            @Html.DisplayNameFor(model => model.FinancialOperation.IsIncome)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DateTime)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Note)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Note)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.SourceOMoney)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.SourceOMoney)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DestinationOfMoney)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DestinationOfMoney)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsTransfer)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsTransfer)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsExpense)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsExpense)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsIncome)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsIncome)
+            @Html.DisplayFor(model => model.FinancialOperation.IsIncome)
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Edit", "Edit", new { id = Model.FinancialOperation.Id }) |
+    @if (Model.FinancialOperation.IsExpense)
+    {
+        @Html.ActionLink("Back to List", "ExpensesIndex")
+    }
+    @if (Model.FinancialOperation.IsIncome)
+    {
+        @Html.ActionLink("Back to List", "IncomesIndex")
+    }
+    @if (Model.FinancialOperation.IsTransfer)
+    {
+        @Html.ActionLink("Back to List", "TransfersIndex")
+    }
 </p>

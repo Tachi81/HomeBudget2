@@ -1,24 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using HomeBudget2.DAL.Interfaces;
+using HomeBudget2.Models;
+using HomeBudget2.ViewModels;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using HomeBudget2.Models;
 
 namespace HomeBudget2.Controllers
 {
     public class FinancialOperationsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly IFinancialOperationRepository _financialOperationRepository;
+        private readonly IBankAccountRepository _bankAccountRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly ISubCategoryRepository _subCategoryRepository;
 
-        // GET: FinancialOperations
-        public ActionResult Index()
+        public FinancialOperationsController(IFinancialOperationRepository financialOperationRepository,
+            IBankAccountRepository bankAccountRepository, ICategoryRepository categoryRepository, ISubCategoryRepository subCategoryRepository)
         {
-            var financialOperations = db.FinancialOperations.Include(f => f.BankAccount).Include(f => f.SubCategory).Include(f => f.TargetBankAccount);
-            return View(financialOperations.ToList());
+            _financialOperationRepository = financialOperationRepository;
+            _bankAccountRepository = bankAccountRepository;
+            _categoryRepository = categoryRepository;
+            _subCategoryRepository = subCategoryRepository;
+        }
+
+        // GET: FinancialOperations - Expenses
+        public ActionResult ExpensesIndex()
+        {
+            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
+            financialOperationVm.ListOfFinancialOperations =
+                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0 && fo.IsExpense,
+                    fo => fo.SubCategory);
+            financialOperationVm.FinancialOperation = new FinancialOperation() { IsExpense = true };
+            return View("Index", financialOperationVm);
+        }
+
+        // GET: FinancialOperations - Incomes
+        public ActionResult IncomesIndex()
+        {
+            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
+            financialOperationVm.ListOfFinancialOperations =
+                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0 && fo.IsIncome,
+                    fo => fo.SubCategory);
+            financialOperationVm.FinancialOperation = new FinancialOperation() { IsIncome = true };
+            return View("Index", financialOperationVm);
+        }
+
+        // GET: FinancialOperations - Transfers
+        public ActionResult TransfersIndex()
+        {
+            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
+            financialOperationVm.ListOfFinancialOperations =
+                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0 && fo.IsTransfer,
+                    fo => fo.TargetBankAccount);
+            financialOperationVm.FinancialOperation = new FinancialOperation() { IsTransfer = true };
+            return View("Index", financialOperationVm);
         }
 
         // GET: FinancialOperations/Details/5
@@ -28,21 +63,45 @@ namespace HomeBudget2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            FinancialOperation financialOperation = db.FinancialOperations.Find(id);
-            if (financialOperation == null)
+            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
+            financialOperationVm.FinancialOperation =
+                _financialOperationRepository.GetWhere(fo => fo.Id == id).FirstOrDefault();
+
+            if (financialOperationVm.FinancialOperation == null)
             {
                 return HttpNotFound();
             }
-            return View(financialOperation);
+            return View(financialOperationVm);
         }
 
-        // GET: FinancialOperations/Create
-        public ActionResult Create()
+        // GET: FinancialOperations/Create Expense
+        public ActionResult CreateExpense()
         {
-            ViewBag.BankAccountId = new SelectList(db.BankAccounts, "Id", "AccountName");
-            ViewBag.SubCategoryId = new SelectList(db.SubCategories, "Id", "SubCategoryName");
-            ViewBag.TargetBankAccountId = new SelectList(db.BankAccounts, "Id", "AccountName");
-            return View();
+            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
+            AddSelectListsToViewModel(financialOperationVm);
+
+            financialOperationVm.FinancialOperation = new FinancialOperation() { IsExpense = true };
+
+            return View("Create", financialOperationVm);
+        }
+
+        // GET: FinancialOperations/Create Income
+        public ActionResult CreateIncome()
+        {
+            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
+            AddSelectListsToViewModel(financialOperationVm);
+            financialOperationVm.FinancialOperation = new FinancialOperation() { IsIncome = true };
+            return View("Create", financialOperationVm);
+        }
+        // GET: FinancialOperations/Create Transfer
+        public ActionResult CreateTransfer()
+        {
+            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
+            var bankaccounts = _bankAccountRepository.GetWhere(ba => ba.Id > 0);
+            AddSelectListsToViewModel(financialOperationVm);
+            financialOperationVm.FinancialOperation = new FinancialOperation() { IsTransfer = true };
+
+            return View("Create", financialOperationVm);
         }
 
         // POST: FinancialOperations/Create
@@ -50,20 +109,22 @@ namespace HomeBudget2.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,AmountOfMoney,DateTime,Note,BankAccountId,SubCategoryId,TargetBankAccountId,SourceOMoney,DestinationOfMoney,IsTransfer,IsExpense,IsIncome")] FinancialOperation financialOperation)
+        public ActionResult Create(FinancialOperationViewModel financialOperationVm)
         {
             if (ModelState.IsValid)
             {
-                db.FinancialOperations.Add(financialOperation);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
 
-            ViewBag.BankAccountId = new SelectList(db.BankAccounts, "Id", "AccountName", financialOperation.BankAccountId);
-            ViewBag.SubCategoryId = new SelectList(db.SubCategories, "Id", "SubCategoryName", financialOperation.SubCategoryId);
-            ViewBag.TargetBankAccountId = new SelectList(db.BankAccounts, "Id", "AccountName", financialOperation.TargetBankAccountId);
-            return View(financialOperation);
+                _financialOperationRepository.Create(financialOperationVm.FinancialOperation);
+
+                return ChooseIndexToGo(financialOperationVm);
+            }
+            AddSelectListsToViewModel(financialOperationVm);
+
+            return View(financialOperationVm);
         }
+
+
 
         // GET: FinancialOperations/Edit/5
         public ActionResult Edit(int? id)
@@ -72,15 +133,16 @@ namespace HomeBudget2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            FinancialOperation financialOperation = db.FinancialOperations.Find(id);
-            if (financialOperation == null)
+            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
+            financialOperationVm.FinancialOperation =
+                _financialOperationRepository.GetWhere(fo => fo.Id == id).FirstOrDefault();
+
+            if (financialOperationVm.FinancialOperation == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.BankAccountId = new SelectList(db.BankAccounts, "Id", "AccountName", financialOperation.BankAccountId);
-            ViewBag.SubCategoryId = new SelectList(db.SubCategories, "Id", "SubCategoryName", financialOperation.SubCategoryId);
-            ViewBag.TargetBankAccountId = new SelectList(db.BankAccounts, "Id", "AccountName", financialOperation.TargetBankAccountId);
-            return View(financialOperation);
+            AddSelectListsToViewModel(financialOperationVm);
+            return View(financialOperationVm);
         }
 
         // POST: FinancialOperations/Edit/5
@@ -88,19 +150,19 @@ namespace HomeBudget2.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,AmountOfMoney,DateTime,Note,BankAccountId,SubCategoryId,TargetBankAccountId,SourceOMoney,DestinationOfMoney,IsTransfer,IsExpense,IsIncome")] FinancialOperation financialOperation)
+        public ActionResult Edit(FinancialOperationViewModel financialOperationVm)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(financialOperation).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                _financialOperationRepository.Update(financialOperationVm.FinancialOperation);
+                return ChooseIndexToGo(financialOperationVm);
             }
-            ViewBag.BankAccountId = new SelectList(db.BankAccounts, "Id", "AccountName", financialOperation.BankAccountId);
-            ViewBag.SubCategoryId = new SelectList(db.SubCategories, "Id", "SubCategoryName", financialOperation.SubCategoryId);
-            ViewBag.TargetBankAccountId = new SelectList(db.BankAccounts, "Id", "AccountName", financialOperation.TargetBankAccountId);
-            return View(financialOperation);
+            AddSelectListsToViewModel(financialOperationVm);
+            return View(financialOperationVm);
         }
+
+
+
 
         // GET: FinancialOperations/Delete/5
         public ActionResult Delete(int? id)
@@ -109,12 +171,15 @@ namespace HomeBudget2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            FinancialOperation financialOperation = db.FinancialOperations.Find(id);
-            if (financialOperation == null)
+            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
+            financialOperationVm.FinancialOperation =
+                _financialOperationRepository.GetWhere(fo => fo.Id == id).FirstOrDefault();
+
+            if (financialOperationVm.FinancialOperation == null)
             {
                 return HttpNotFound();
             }
-            return View(financialOperation);
+            return View(financialOperationVm);
         }
 
         // POST: FinancialOperations/Delete/5
@@ -122,19 +187,64 @@ namespace HomeBudget2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            FinancialOperation financialOperation = db.FinancialOperations.Find(id);
-            db.FinancialOperations.Remove(financialOperation);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
+            financialOperationVm.FinancialOperation =
+                _financialOperationRepository.GetWhere(fo => fo.Id == id).FirstOrDefault();
+            _financialOperationRepository.Delete(financialOperationVm.FinancialOperation);
+            return ChooseIndexToGo(financialOperationVm);
         }
 
-        protected override void Dispose(bool disposing)
+
+
+
+        private void AddSelectListsToViewModel(FinancialOperationViewModel financialOperationVm)
         {
-            if (disposing)
+            var bankaccounts = _bankAccountRepository.GetWhere(ba => ba.Id > 0);
+            var subcategories = _subCategoryRepository.GetWhere(sc => sc.Id > 0 && sc.IsIncome);
+            financialOperationVm.SelectListOfBankAccounts = new SelectList(bankaccounts, "Id", "AccountName");
+            financialOperationVm.SelectListOfSubCategories = new SelectList(subcategories, "Id", "SubCategoryName");
+
+        }
+
+        private ActionResult ChooseIndexToGo(FinancialOperationViewModel financialOperationVm)
+        {
+            if (financialOperationVm.FinancialOperation.IsExpense)
             {
-                db.Dispose();
+                return RedirectToAction("ExpensesIndex");
             }
-            base.Dispose(disposing);
+            if (financialOperationVm.FinancialOperation.IsIncome)
+            {
+                return RedirectToAction("IncomesIndex");
+            }
+            return RedirectToAction("TransfersIndex");
+        }
+
+        private static void SetSourceOfMoneyAndDestinationOfMoney(FinancialOperationViewModel financialOperationVm)
+        {
+            if (financialOperationVm.FinancialOperation.IsExpense)
+            {
+                financialOperationVm.FinancialOperation.SourceOfMoney =
+                    financialOperationVm.FinancialOperation.BankAccount.AccountName;
+
+                financialOperationVm.FinancialOperation.DestinationOfMoney =
+                    financialOperationVm.FinancialOperation.SubCategory.SubCategoryName;
+            }
+            if (financialOperationVm.FinancialOperation.IsIncome)
+            {
+                financialOperationVm.FinancialOperation.SourceOfMoney =
+                    financialOperationVm.FinancialOperation.SubCategory.SubCategoryName;
+
+                financialOperationVm.FinancialOperation.DestinationOfMoney =
+                    financialOperationVm.FinancialOperation.BankAccount.AccountName;
+            }
+            if (financialOperationVm.FinancialOperation.IsTransfer)
+            {
+                financialOperationVm.FinancialOperation.SourceOfMoney =
+                    financialOperationVm.FinancialOperation.BankAccount.AccountName;
+
+                financialOperationVm.FinancialOperation.DestinationOfMoney =
+                    financialOperationVm.FinancialOperation.TargetBankAccount.AccountName;
+            }
         }
     }
 }
