@@ -217,6 +217,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BankAccountsController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
+    <Compile Include="Controllers\FinancialOperationsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SubCategoriesController.cs" />
     <Compile Include="DAL\Repositories\AbstractRepository.cs" />
@@ -239,6 +240,10 @@
     <Compile Include="Migrations\201804160749344_AddedModels.cs" />
     <Compile Include="Migrations\201804160749344_AddedModels.Designer.cs">
       <DependentUpon>201804160749344_AddedModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804190656497_FinancialOperationClassChanged.cs" />
+    <Compile Include="Migrations\201804190656497_FinancialOperationClassChanged.Designer.cs">
+      <DependentUpon>201804190656497_FinancialOperationClassChanged.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -308,6 +313,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\DatePicker.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -370,6 +376,11 @@
     <Content Include="Views\Categories\Details.cshtml" />
     <Content Include="Views\Categories\Edit.cshtml" />
     <Content Include="Views\Categories\Index.cshtml" />
+    <Content Include="Views\FinancialOperations\Create.cshtml" />
+    <Content Include="Views\FinancialOperations\Delete.cshtml" />
+    <Content Include="Views\FinancialOperations\Details.cshtml" />
+    <Content Include="Views\FinancialOperations\Edit.cshtml" />
+    <Content Include="Views\FinancialOperations\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -392,6 +403,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804160749344_AddedModels.resx">
       <DependentUpon>201804160749344_AddedModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804190656497_FinancialOperationClassChanged.resx">
+      <DependentUpon>201804190656497_FinancialOperationClassChanged.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
