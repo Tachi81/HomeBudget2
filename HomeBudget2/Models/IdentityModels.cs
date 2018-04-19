@@ -1,8 +1,8 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace HomeBudget2.Models
 {
@@ -32,9 +32,7 @@ namespace HomeBudget2.Models
 
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<FinancialOperation> FinancialOperations { get; set; }
-        public DbSet<SourceOMoney> SourcesOMoney { get; set; }
 
-        public DbSet<DestinationOfMoney> DestinationsOfMoney { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
 
@@ -42,6 +40,10 @@ namespace HomeBudget2.Models
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<BankAccount>().Property(bankAcc => bankAcc.AccountName).IsRequired();
+
+           // modelBuilder.Entity<FinancialOperation>().HasOptional(fo=>fo.SourceBankAccountId).WithRequired()
+
+
 
             modelBuilder.Entity<SubCategory>().Property(SubCat => SubCat.SubCategoryName).IsRequired();
 
