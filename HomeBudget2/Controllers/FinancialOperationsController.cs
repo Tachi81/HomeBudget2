@@ -117,7 +117,7 @@ namespace HomeBudget2.Controllers
 
                 _financialOperationRepository.Create(financialOperationVm.FinancialOperation);
 
-                _bankAccountLogic.CalculateBalanceOfAllAccounts();
+                _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem();
 
                 return ChooseIndexToGo(financialOperationVm);
             }
@@ -160,7 +160,7 @@ namespace HomeBudget2.Controllers
                 SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
                 _financialOperationRepository.Update(financialOperationVm.FinancialOperation);
 
-                _bankAccountLogic.CalculateBalanceOfAllAccounts();
+                _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem();
                 return ChooseIndexToGo(financialOperationVm);
             }
             AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
@@ -197,6 +197,7 @@ namespace HomeBudget2.Controllers
             financialOperationVm.FinancialOperation =
                 _financialOperationRepository.GetWhere(fo => fo.Id == id).FirstOrDefault();
             _financialOperationRepository.Delete(financialOperationVm.FinancialOperation);
+            _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem();
             return ChooseIndexToGo(financialOperationVm);
         }
 

@@ -94,7 +94,7 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
-                _bankAccountLogic.CalculateBalanceOfAllAccounts();
+                _bankAccountLogic.CalculateBalanceOfSelectedAccount(bankAccountVm);
                 _bankAccountRepository.Update(bankAccountVm.BankAccount);
                 return RedirectToAction("Index");
             }

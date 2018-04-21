@@ -1,7 +1,10 @@
-﻿namespace HomeBudget2.DAL.Interfaces
+﻿using HomeBudget2.ViewModels;
+
+namespace HomeBudget2.DAL.Interfaces
 {
     public interface IBankAccountLogic
     {
-        void CalculateBalanceOfAllAccounts();
+        void CalculateBalanceOfAllAccountsAndUpdateThem();
+        BankAccountViewModel CalculateBalanceOfSelectedAccount(BankAccountViewModel bankAccountVm);
     }
 }
