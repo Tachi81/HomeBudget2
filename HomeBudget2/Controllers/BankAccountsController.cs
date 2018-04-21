@@ -10,10 +10,12 @@ namespace HomeBudget2.Controllers
     public class BankAccountsController : Controller
     {
         private readonly IBankAccountRepository _bankAccountRepository;
+        private readonly IBankAccountLogic _bankAccountLogic;
 
-        public BankAccountsController(IBankAccountRepository bankAccountRepository)
+        public BankAccountsController(IBankAccountRepository bankAccountRepository, IBankAccountLogic bankAccountLogic)
         {
             _bankAccountRepository = bankAccountRepository;
+            _bankAccountLogic = bankAccountLogic;
         }
 
         // GET: BankAccounts
@@ -45,7 +47,7 @@ namespace HomeBudget2.Controllers
         public ActionResult Create()
         {
             var bankaccountVm = new BankAccountViewModel();
-            bankaccountVm.BankAccountsList = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id > 0);
+            // bankaccountVm.BankAccountsList = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id > 0);
 
             return View(bankaccountVm);
         }
@@ -59,6 +61,7 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
+                bankAccountVm.BankAccount.Balance = bankAccountVm.BankAccount.InitialBalance;
                 _bankAccountRepository.Create(bankAccountVm.BankAccount);
                 return RedirectToAction("Index");
             }
@@ -91,6 +94,7 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
+                _bankAccountLogic.CalculateBalanceOfAllAccounts();
                 _bankAccountRepository.Update(bankAccountVm.BankAccount);
                 return RedirectToAction("Index");
             }

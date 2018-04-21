@@ -11,14 +11,16 @@ namespace HomeBudget2.Controllers
     {
         private readonly IFinancialOperationRepository _financialOperationRepository;
         private readonly IBankAccountRepository _bankAccountRepository;
+        private readonly IBankAccountLogic _bankAccountLogic;
         private readonly ICategoryRepository _categoryRepository;
         private readonly ISubCategoryRepository _subCategoryRepository;
 
         public FinancialOperationsController(IFinancialOperationRepository financialOperationRepository,
-            IBankAccountRepository bankAccountRepository, ICategoryRepository categoryRepository, ISubCategoryRepository subCategoryRepository)
+            IBankAccountRepository bankAccountRepository, IBankAccountLogic bankAccountLogic, ICategoryRepository categoryRepository, ISubCategoryRepository subCategoryRepository)
         {
             _financialOperationRepository = financialOperationRepository;
             _bankAccountRepository = bankAccountRepository;
+            _bankAccountLogic = bankAccountLogic;
             _categoryRepository = categoryRepository;
             _subCategoryRepository = subCategoryRepository;
         }
@@ -115,6 +117,8 @@ namespace HomeBudget2.Controllers
 
                 _financialOperationRepository.Create(financialOperationVm.FinancialOperation);
 
+                _bankAccountLogic.CalculateBalanceOfAllAccounts();
+
                 return ChooseIndexToGo(financialOperationVm);
             }
 
@@ -153,7 +157,10 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
+                SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
                 _financialOperationRepository.Update(financialOperationVm.FinancialOperation);
+
+                _bankAccountLogic.CalculateBalanceOfAllAccounts();
                 return ChooseIndexToGo(financialOperationVm);
             }
             AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);

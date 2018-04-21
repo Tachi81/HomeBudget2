@@ -1,4 +1,5 @@
 ﻿using HomeBudget2;
+using HomeBudget2.BusinessLogic;
 using HomeBudget2.DAL.Interfaces;
 using HomeBudget2.DAL.Repositories;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
@@ -45,6 +46,7 @@ namespace HomeBudget2
             //kernel.Bind<IRepo>().ToMethod(ctx => new Repo("Ninject Rocks!"));
             kernel.Bind<IFinancialOperationRepository>().To<FinancialOperationRepository>();
             kernel.Bind<IBankAccountRepository>().To<BankAccountRepository>();
+            kernel.Bind<IBankAccountLogic>().To<BankAccountLogic>();
             kernel.Bind<ICategoryRepository>().To<CategoryRepository>();
             kernel.Bind<ISubCategoryRepository>().To<SubCategoryRepository>();
         }
