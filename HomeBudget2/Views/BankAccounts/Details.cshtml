@@ -5,9 +5,18 @@
 <h3>Details</h3>
 
 <div>
-    <h4>BankAccount</h4>
+   
     <hr />
     <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BankAccount.AccountName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BankAccount.AccountName)
+        </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.BankAccount.InitialBalance)
         </dt>
@@ -22,14 +31,6 @@
 
         <dd>
             @Html.DisplayFor(model => model.BankAccount.Balance)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.BankAccount.AccountName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.BankAccount.AccountName)
         </dd>
 
     </dl>
