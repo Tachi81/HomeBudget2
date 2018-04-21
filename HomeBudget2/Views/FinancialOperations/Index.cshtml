@@ -40,10 +40,33 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.FinancialOperation.SourceOfMoney)
+            @if (financialOperation.IsExpense)
+            {
+                @Html.DisplayName("Source Account")
+            }
+            @if (financialOperation.IsIncome)
+            {
+                @Html.DisplayName("Target Account")
+            }
+            @if (financialOperation.IsTransfer)
+            {
+                @Html.DisplayName("Source Account")
+            }
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FinancialOperation.DestinationOfMoney)
+            @if (financialOperation.IsExpense)
+            {
+                @Html.DisplayName("Expense SubCategory")
+            }
+            @if (financialOperation.IsIncome)
+            {
+                @Html.DisplayName(" Source of Income")
+            }
+            @if (financialOperation.IsTransfer)
+            {
+                @Html.DisplayName("Target Account")
+            }
+
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FinancialOperation.AmountOfMoney)
@@ -61,12 +84,25 @@
     @foreach (var item in Model.ListOfFinancialOperations)
     {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.SourceOfMoney)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DestinationOfMoney)
-            </td>
+            @if (financialOperation.IsIncome)
+            {
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.DestinationOfMoney)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SourceOfMoney)
+                </td>
+            }
+            else
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.SourceOfMoney)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DestinationOfMoney)
+                </td> 
+            }
             <td>
                 @Html.DisplayFor(modelItem => item.AmountOfMoney)
             </td>
