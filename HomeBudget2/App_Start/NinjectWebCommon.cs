@@ -2,6 +2,7 @@
 using HomeBudget2.BusinessLogic;
 using HomeBudget2.DAL.Interfaces;
 using HomeBudget2.DAL.Repositories;
+using HomeBudget2.Service;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Ninject;
 using Ninject.Web.Common;
@@ -46,9 +47,12 @@ namespace HomeBudget2
             //kernel.Bind<IRepo>().ToMethod(ctx => new Repo("Ninject Rocks!"));
             kernel.Bind<IFinancialOperationRepository>().To<FinancialOperationRepository>();
             kernel.Bind<IBankAccountRepository>().To<BankAccountRepository>();
-            kernel.Bind<IBankAccountLogic>().To<BankAccountLogic>();
             kernel.Bind<ICategoryRepository>().To<CategoryRepository>();
             kernel.Bind<ISubCategoryRepository>().To<SubCategoryRepository>();
+
+            kernel.Bind<IFinancialOperationService>().To<FinancialOperationService>();
+            kernel.Bind<IBankAccountLogic>().To<BankAccountLogic>();
+
         }
     }
 }
