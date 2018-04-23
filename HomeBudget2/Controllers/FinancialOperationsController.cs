@@ -30,10 +30,22 @@ namespace HomeBudget2.Controllers
         public ActionResult HistoryChooseAccount()
         {
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
-            financialOperationVm.ListOfFinancialOperations =
-                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0);
+            _financialOperationService.AddSelectListsToViewModel(financialOperationVm, true);
 
-            return View("Index", financialOperationVm);
+            return View("HistoryChooseAccount", financialOperationVm);
+        }
+
+        // GET: FinancialOperations - History
+        public ActionResult History(FinancialOperationViewModel financialOperationVm)
+        {
+            if (financialOperationVm.FinancialOperation.BankAccountId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            _financialOperationService.FulfillHistoryViewModelWithFinancialOperationAndListOfFinancialOperations(financialOperationVm);
+
+            return View("History", financialOperationVm);
         }
 
         // GET: FinancialOperations - Expenses

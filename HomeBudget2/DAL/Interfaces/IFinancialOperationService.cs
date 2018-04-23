@@ -12,5 +12,7 @@ namespace HomeBudget2.DAL.Interfaces
 
         void SetSourceOfMoneyAndDestinationOfMoney(FinancialOperationViewModel financialOperationVm);
 
+
+        FinancialOperationViewModel FulfillHistoryViewModelWithFinancialOperationAndListOfFinancialOperations(FinancialOperationViewModel financialOperationVm);
     }
 }
