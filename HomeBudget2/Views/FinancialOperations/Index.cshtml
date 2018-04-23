@@ -136,9 +136,9 @@
                 </td>
             }
 
-            <td>
-                @Html.DisplayFor(modelItem => item.DateTime)
-            </td>
+                <td>
+                    @item.DateTime.ToString("dd/MM/yyyy")
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Note)
             </td>
