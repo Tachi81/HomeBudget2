@@ -53,10 +53,23 @@
                 @Html.DisplayName("Source Account")
             }
         </th>
-        
+
         <th>
             @Html.DisplayNameFor(model => model.FinancialOperation.AmountOfMoney)
         </th>
+        
+        @if (financialOperation.IsExpense)
+        {
+            <th>
+            @Html.DisplayName("Expense Category")
+            </th>
+        }
+        @if (financialOperation.IsIncome)
+        {
+            <th>
+            @Html.DisplayName("Income Category")
+            </th>
+        }
 
         <th>
             @if (financialOperation.IsExpense)
@@ -65,7 +78,7 @@
             }
             @if (financialOperation.IsIncome)
             {
-                @Html.DisplayName(" Source of Income")
+                @Html.DisplayName("Income SubCategory")
             }
             @if (financialOperation.IsTransfer)
             {
@@ -73,7 +86,7 @@
             }
 
         </th>
-       
+
         <th>
             @Html.DisplayNameFor(model => model.FinancialOperation.DateTime)
         </th>
@@ -97,6 +110,9 @@
                     @Html.DisplayFor(modelItem => item.AmountOfMoney)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.SubCategory.Category.CategoryName)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.SourceOfMoney)
                 </td>
             }
@@ -108,11 +124,18 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.AmountOfMoney)
                 </td>
+                if (item.IsExpense)
+                 {
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubCategory.Category.CategoryName)
+                </td>
+                 }
+
                 <td>
                     @Html.DisplayFor(modelItem => item.DestinationOfMoney)
-                </td> 
+                </td>
             }
-            
+
             <td>
                 @Html.DisplayFor(modelItem => item.DateTime)
             </td>

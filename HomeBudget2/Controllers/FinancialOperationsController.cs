@@ -53,8 +53,7 @@ namespace HomeBudget2.Controllers
         {
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
             financialOperationVm.ListOfFinancialOperations =
-                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0 && fo.IsExpense,
-                    fo => fo.SubCategory);
+                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0 && fo.IsExpense, fo => fo.SubCategory, fo => fo.SubCategory.Category);
             financialOperationVm.FinancialOperation = new FinancialOperation() { IsExpense = true };
             return View("Index", financialOperationVm);
         }
@@ -64,8 +63,7 @@ namespace HomeBudget2.Controllers
         {
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
             financialOperationVm.ListOfFinancialOperations =
-                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0 && fo.IsIncome,
-                    fo => fo.SubCategory);
+                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0 && fo.IsIncome, fo => fo.SubCategory, fo => fo.SubCategory.Category);
             financialOperationVm.FinancialOperation = new FinancialOperation() { IsIncome = true };
             return View("Index", financialOperationVm);
         }
@@ -90,7 +88,7 @@ namespace HomeBudget2.Controllers
             }
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
             financialOperationVm.FinancialOperation =
-                _financialOperationRepository.GetWhere(fo => fo.Id == id).FirstOrDefault();
+                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id == id, fo => fo.SubCategory, fo => fo.SubCategory.Category).FirstOrDefault();
 
             if (financialOperationVm.FinancialOperation == null)
             {
