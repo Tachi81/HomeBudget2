@@ -77,7 +77,29 @@
         <dd>
             @Html.DisplayFor(model => model.FinancialOperation.AmountOfMoney)
         </dd>
+        
+        
 
+        @if (financialOperation.IsExpense || financialOperation.IsIncome)
+        {
+            <dt>
+                @if (financialOperation.IsExpense)
+                {
+                @Html.DisplayName("Expense Category")
+                }
+
+                @if (financialOperation.IsIncome)
+                {
+                @Html.DisplayName(" Income Category")
+                }
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FinancialOperation.SubCategory.Category.CategoryName)
+            </dd>
+       
+        }
+        
         <dt>
             @ChooseTargetOfMoney(financialOperation)
         </dt>
