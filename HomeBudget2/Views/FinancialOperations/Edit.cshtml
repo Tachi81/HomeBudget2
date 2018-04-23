@@ -25,85 +25,86 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-      
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.FinancialOperation.Id)
-        @Html.HiddenFor(model => model.FinancialOperation.IsExpense)
-        @Html.HiddenFor(model => model.FinancialOperation.IsIncome)
-        @Html.HiddenFor(model => model.FinancialOperation.IsTransfer)
+<div class="form-horizontal">
 
-        @if (financialOperation.IsExpense || financialOperation.IsTransfer)
-        {
-            <div class="form-group">
-                @Html.LabelFor(model => model.FinancialOperation.BankAccountId, "From account", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.FinancialOperation.BankAccountId, Model.SelectListOfBankAccounts, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.FinancialOperation.BankAccountId, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        }
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.FinancialOperation.Id)
+    @Html.HiddenFor(model => model.FinancialOperation.IsExpense)
+    @Html.HiddenFor(model => model.FinancialOperation.IsIncome)
+    @Html.HiddenFor(model => model.FinancialOperation.IsTransfer)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.FinancialOperation.AmountOfMoney, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FinancialOperation.AmountOfMoney, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FinancialOperation.AmountOfMoney, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
-        @if (financialOperation.IsExpense || financialOperation.IsIncome)
-        {
-            <div class="form-group">
-                @if (financialOperation.IsExpense)
-                {
-                    @Html.LabelFor(model => model.FinancialOperation.SubCategoryId, "Expense SubCategory", htmlAttributes: new { @class = "control-label col-md-2" })
-                }
-                else
-                {
-                    @Html.LabelFor(model => model.FinancialOperation.SubCategoryId, "Income SubCategory", htmlAttributes: new { @class = "control-label col-md-2" })
-                }
-
-                <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.FinancialOperation.SubCategoryId, Model.SelectListOfSubCategories, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.FinancialOperation.SubCategoryId, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        }
-
-        @if (financialOperation.IsIncome || financialOperation.IsTransfer)
-        {
-            <div class="form-group">
-                @Html.LabelFor(model => model.FinancialOperation.TargetBankAccountId, "Target account", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.FinancialOperation.TargetBankAccountId, Model.SelectListOfBankAccounts, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.FinancialOperation.TargetBankAccountId, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        }
-        <div class="form-group">
-            @Html.LabelFor(model => model.FinancialOperation.DateTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FinancialOperation.DateTime, new { htmlAttributes = new { @class = "form-control datepicker" } })
-                @Html.ValidationMessageFor(model => model.FinancialOperation.DateTime, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.FinancialOperation.Note, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FinancialOperation.Note, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FinancialOperation.Note, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.FinancialOperation.AmountOfMoney, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.FinancialOperation.AmountOfMoney, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.FinancialOperation.AmountOfMoney, "", new { @class = "text-danger" })
         </div>
     </div>
+
+    @if (financialOperation.IsExpense || financialOperation.IsTransfer)
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.FinancialOperation.BankAccountId, "From account", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.FinancialOperation.BankAccountId, Model.SelectListOfBankAccounts, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FinancialOperation.BankAccountId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    }
+
+    @if (financialOperation.IsExpense || financialOperation.IsIncome)
+    {
+        <div class="form-group">
+            @if (financialOperation.IsExpense)
+            {
+                @Html.LabelFor(model => model.FinancialOperation.SubCategoryId, "Expense SubCategory", htmlAttributes: new { @class = "control-label col-md-2" })
+            }
+            else
+            {
+                @Html.LabelFor(model => model.FinancialOperation.SubCategoryId, "Income SubCategory", htmlAttributes: new { @class = "control-label col-md-2" })
+            }
+
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.FinancialOperation.SubCategoryId, Model.SelectListOfSubCategories, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FinancialOperation.SubCategoryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    }
+
+    @if (financialOperation.IsIncome || financialOperation.IsTransfer)
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.FinancialOperation.TargetBankAccountId, "Target account", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.FinancialOperation.TargetBankAccountId, Model.SelectListOfBankAccounts, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FinancialOperation.TargetBankAccountId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    }
+    <div class="form-group">
+        @Html.LabelFor(model => model.FinancialOperation.DateTime, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.FinancialOperation.DateTime, new { htmlAttributes = new { @class = "form-control datepicker" } })
+            @Html.ValidationMessageFor(model => model.FinancialOperation.DateTime, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.FinancialOperation.Note, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.FinancialOperation.Note, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.FinancialOperation.Note, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
 }
 
 <div>

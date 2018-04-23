@@ -53,6 +53,11 @@
                 @Html.DisplayName("Source Account")
             }
         </th>
+        
+        <th>
+            @Html.DisplayNameFor(model => model.FinancialOperation.AmountOfMoney)
+        </th>
+
         <th>
             @if (financialOperation.IsExpense)
             {
@@ -68,9 +73,7 @@
             }
 
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FinancialOperation.AmountOfMoney)
-        </th>
+       
         <th>
             @Html.DisplayNameFor(model => model.FinancialOperation.DateTime)
         </th>
@@ -91,6 +94,9 @@
                     @Html.DisplayFor(modelItem => item.DestinationOfMoney)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.AmountOfMoney)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.SourceOfMoney)
                 </td>
             }
@@ -100,12 +106,13 @@
                     @Html.DisplayFor(modelItem => item.SourceOfMoney)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.AmountOfMoney)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.DestinationOfMoney)
                 </td> 
             }
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountOfMoney)
-            </td>
+            
             <td>
                 @Html.DisplayFor(modelItem => item.DateTime)
             </td>

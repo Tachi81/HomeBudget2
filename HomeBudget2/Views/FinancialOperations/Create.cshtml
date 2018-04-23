@@ -30,6 +30,14 @@
     @Html.HiddenFor(model => model.FinancialOperation.IsExpense)
     @Html.HiddenFor(model => model.FinancialOperation.IsIncome)
     @Html.HiddenFor(model => model.FinancialOperation.IsTransfer)
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.FinancialOperation.AmountOfMoney, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.FinancialOperation.AmountOfMoney, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.FinancialOperation.AmountOfMoney, "", new { @class = "text-danger" })
+        </div>
+    </div>
 
     @if (financialOperation.IsExpense || financialOperation.IsTransfer)
     {
@@ -42,13 +50,7 @@
         </div>
     }
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.FinancialOperation.AmountOfMoney, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.FinancialOperation.AmountOfMoney, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.FinancialOperation.AmountOfMoney, "", new { @class = "text-danger" })
-        </div>
-    </div>
+   
 
     @if (financialOperation.IsExpense || financialOperation.IsIncome)
     {
