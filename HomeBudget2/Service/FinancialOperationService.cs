@@ -1,5 +1,7 @@
 ﻿using HomeBudget2.DAL.Interfaces;
+using HomeBudget2.Models;
 using HomeBudget2.ViewModels;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -10,11 +12,13 @@ namespace HomeBudget2.Service
 
         private readonly IBankAccountRepository _bankAccountRepository;
         private readonly ISubCategoryRepository _subCategoryRepository;
+        private readonly IFinancialOperationRepository _financialOperationRepository;
 
-        public FinancialOperationService(IBankAccountRepository bankAccountRepository, ISubCategoryRepository subCategoryRepository)
+        public FinancialOperationService(IBankAccountRepository bankAccountRepository, ISubCategoryRepository subCategoryRepository, IFinancialOperationRepository financialOperationRepository)
         {
             _bankAccountRepository = bankAccountRepository;
             _subCategoryRepository = subCategoryRepository;
+            _financialOperationRepository = financialOperationRepository;
         }
 
 
@@ -40,6 +44,34 @@ namespace HomeBudget2.Service
             }
             return "TransfersIndex";
         }
+
+
+
+        public FinancialOperationViewModel FulfillHistoryViewModelWithFinancialOperationAndListOfFinancialOperations(FinancialOperationViewModel financialOperationVm)
+        {
+            financialOperationVm.FinancialOperation.BankAccount = _bankAccountRepository
+                .GetWhere(ba => ba.Id == financialOperationVm.FinancialOperation.BankAccountId).FirstOrDefault();
+
+            financialOperationVm.ListOfFinancialOperations = new List<FinancialOperation>();
+
+            List<FinancialOperation> expensesList = _financialOperationRepository.GetWhere(fo =>
+                fo.BankAccountId == financialOperationVm.FinancialOperation.BankAccountId);
+            expensesList.ForEach(expense => expense.AmountOfMoney *= (-1));
+
+            List<FinancialOperation> incomesList = _financialOperationRepository.GetWhere(fo =>
+                fo.TargetBankAccountId == financialOperationVm.FinancialOperation.BankAccountId);
+
+
+
+
+            financialOperationVm.ListOfFinancialOperations.AddRange(expensesList);
+            financialOperationVm.ListOfFinancialOperations.AddRange(incomesList);
+            financialOperationVm.ListOfFinancialOperations = financialOperationVm.ListOfFinancialOperations.OrderByDescending(fo => fo.DateTime.Date).ToList();
+
+            return financialOperationVm;
+        }
+
+
 
         public void SetSourceOfMoneyAndDestinationOfMoney(FinancialOperationViewModel financialOperationVm)
         {

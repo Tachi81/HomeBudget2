@@ -1,0 +1,88 @@
+﻿@using HomeBudget2.Models
+@model HomeBudget2.ViewModels.FinancialOperationViewModel
+
+@{
+    FinancialOperation financialOperation = Model.FinancialOperation;
+}
+
+
+<h2>@Model.FinancialOperation.BankAccount.AccountName</h2>
+
+<div>
+    <h3>History</h3>
+    <hr />
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayName("Account")
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.FinancialOperation.AmountOfMoney)
+            </th>
+
+            <th>
+                @Html.DisplayName(@"From / To")
+            </th>
+
+            <th>
+                @Html.DisplayName("Date")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FinancialOperation.Note)
+            </th>
+
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.ListOfFinancialOperations)
+        {
+            <tr>
+                @if (item.IsIncome || (item.IsTransfer && item.TargetBankAccountId == financialOperation.BankAccountId))
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DestinationOfMoney)
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SourceOfMoney)
+                    </td>
+                }
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.AmountOfMoney)
+                </td>
+
+                @if (item.IsIncome || (item.IsTransfer && item.TargetBankAccountId == financialOperation.BankAccountId))
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SourceOfMoney)
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DestinationOfMoney)
+                    </td>
+                }
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTime.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Note)
+                </td>
+
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
