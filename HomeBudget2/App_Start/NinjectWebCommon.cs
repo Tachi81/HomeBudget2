@@ -50,6 +50,8 @@ namespace HomeBudget2
             kernel.Bind<ICategoryRepository>().To<CategoryRepository>();
             kernel.Bind<ISubCategoryRepository>().To<SubCategoryRepository>();
 
+
+            kernel.Bind<ISubcategoryService>().To<SubcategoryService>();
             kernel.Bind<IFinancialOperationService>().To<FinancialOperationService>();
             kernel.Bind<IBankAccountLogic>().To<BankAccountLogic>();
 
