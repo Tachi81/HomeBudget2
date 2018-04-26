@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using HomeBudget2.DAL.Interfaces;
+﻿using HomeBudget2.DAL.Interfaces;
 using HomeBudget2.Models;
 using HomeBudget2.ViewModels;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace HomeBudget2.Service
 {
@@ -34,7 +31,10 @@ namespace HomeBudget2.Service
         {
             SubCategoryViewModel subCategoryVm = new SubCategoryViewModel();
             subCategoryVm.ListOfSubCategories =
-                _subCategoryRepository.GetWhereWithIncludes(subCat => subCat.Id > 0 && isSubCategoryAnExpenseSubCat ? subCat.IsExpense : subCat.IsIncome, subcat => subcat.Category);
+                _subCategoryRepository
+                    .GetWhereWithIncludes(
+                        subCat => subCat.Id > 0 && isSubCategoryAnExpenseSubCat ? subCat.IsExpense : subCat.IsIncome,
+                        subcat => subcat.Category).OrderBy(sc => sc.Category.CategoryName).ToList();
             if (subCategoryVm.ListOfSubCategories.Count == 0)
             {
                 SubCategory subCategory = new SubCategory();

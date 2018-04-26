@@ -1,5 +1,6 @@
 ﻿@using HomeBudget2.Models
 @model HomeBudget2.ViewModels.FinancialOperationViewModel
+
 @{
     FinancialOperation financialOperation = Model.FinancialOperation;
 }
@@ -55,7 +56,7 @@
         </th>
 
         <th>
-            @Html.DisplayNameFor(model => model.FinancialOperation.AmountOfMoney)
+            @Html.DisplayName("Amount")
         </th>
         
         @if (financialOperation.IsExpense)
