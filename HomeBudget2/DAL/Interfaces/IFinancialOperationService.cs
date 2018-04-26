@@ -4,6 +4,8 @@ namespace HomeBudget2.DAL.Interfaces
 {
     public interface IFinancialOperationService
     {
+        FinancialOperationViewModel CreateViewModelWithAll(bool isExpense, bool isIncome);
+
         void AddSelectListsToViewModel(FinancialOperationViewModel financialOperationVm, bool isExpense);
 
 

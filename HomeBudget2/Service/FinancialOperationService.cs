@@ -22,6 +22,22 @@ namespace HomeBudget2.Service
         }
 
 
+        public FinancialOperationViewModel CreateViewModelWithAll(bool isExpense, bool isIncome)
+        {
+            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
+            financialOperationVm.ListOfFinancialOperations =
+                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0 && isExpense ? fo.IsExpense : isIncome ? fo.IsIncome : fo.IsTransfer, fo => fo.SubCategory, fo => fo.SubCategory.Category).OrderByDescending(fo => fo.DateTime).ToList();
+            financialOperationVm.FinancialOperation = new FinancialOperation()
+            {
+                IsExpense = isExpense,
+                IsIncome = isIncome,
+                IsTransfer = !isExpense && !isIncome
+            };
+
+            AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
+            return financialOperationVm;
+        }
+
         public void AddSelectListsToViewModel(FinancialOperationViewModel financialOperationVm, bool isExpense)
         {
             var bankaccounts = _bankAccountRepository.GetWhere(ba => ba.Id > 0);
@@ -60,8 +76,6 @@ namespace HomeBudget2.Service
 
             List<FinancialOperation> incomesList = _financialOperationRepository.GetWhere(fo =>
                 fo.TargetBankAccountId == financialOperationVm.FinancialOperation.BankAccountId);
-
-
 
 
             financialOperationVm.ListOfFinancialOperations.AddRange(expensesList);

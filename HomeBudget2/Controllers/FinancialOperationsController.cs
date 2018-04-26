@@ -51,31 +51,32 @@ namespace HomeBudget2.Controllers
         // GET: FinancialOperations - Expenses
         public ActionResult ExpensesIndex()
         {
-            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
-            financialOperationVm.ListOfFinancialOperations =
-                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0 && fo.IsExpense, fo => fo.SubCategory, fo => fo.SubCategory.Category);
-            financialOperationVm.FinancialOperation = new FinancialOperation() { IsExpense = true };
+            bool IsExpense = true;
+            bool IsIncome = false;
+            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome);
+
             return View("Index", financialOperationVm);
         }
 
+        
         // GET: FinancialOperations - Incomes
         public ActionResult IncomesIndex()
         {
-            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
-            financialOperationVm.ListOfFinancialOperations =
-                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0 && fo.IsIncome, fo => fo.SubCategory, fo => fo.SubCategory.Category);
-            financialOperationVm.FinancialOperation = new FinancialOperation() { IsIncome = true };
+            bool IsExpense = false;
+            bool IsIncome = true;
+            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome);
+
             return View("Index", financialOperationVm);
         }
 
         // GET: FinancialOperations - Transfers
         public ActionResult TransfersIndex()
         {
-            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
-            financialOperationVm.ListOfFinancialOperations =
-                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0 && fo.IsTransfer,
-                    fo => fo.TargetBankAccount);
-            financialOperationVm.FinancialOperation = new FinancialOperation() { IsTransfer = true };
+            bool IsExpense = false;
+            bool IsIncome = false;
+            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome);
+
+
             return View("Index", financialOperationVm);
         }
 
@@ -97,33 +98,6 @@ namespace HomeBudget2.Controllers
             return View(financialOperationVm);
         }
 
-        // GET: FinancialOperations/Create Expense
-        public ActionResult CreateExpense()
-        {
-            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
-            financialOperationVm.FinancialOperation = new FinancialOperation() { IsExpense = true };
-            _financialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
-
-            return View("Create", financialOperationVm);
-        }
-
-        // GET: FinancialOperations/Create Income
-        public ActionResult CreateIncome()
-        {
-            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
-            financialOperationVm.FinancialOperation = new FinancialOperation() { IsIncome = true };
-            _financialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
-            return View("Create", financialOperationVm);
-        }
-        // GET: FinancialOperations/Create Transfer
-        public ActionResult CreateTransfer()
-        {
-            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
-            financialOperationVm.FinancialOperation = new FinancialOperation() { IsTransfer = true };
-            _financialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
-
-            return View("Create", financialOperationVm);
-        }
 
         // POST: FinancialOperations/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
