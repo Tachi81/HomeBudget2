@@ -3,10 +3,74 @@ namespace HomeBudget2.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class createDB : DbMigration
+    public partial class AddedModel : DbMigration
     {
         public override void Up()
         {
+            CreateTable(
+                "dbo.BankAccounts",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        InitialBalance = c.Double(nullable: false),
+                        Balance = c.Double(nullable: false),
+                        AccountName = c.String(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.FinancialOperations",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        AmountOfMoney = c.Double(nullable: false),
+                        DateTime = c.DateTime(nullable: false),
+                        Note = c.String(),
+                        BankAccountId = c.Int(),
+                        SubCategoryId = c.Int(),
+                        TargetBankAccountId = c.Int(),
+                        SourceOfMoney = c.String(),
+                        DestinationOfMoney = c.String(),
+                        IsTransfer = c.Boolean(nullable: false),
+                        IsExpense = c.Boolean(nullable: false),
+                        IsIncome = c.Boolean(nullable: false),
+                        BankAccount_Id = c.Int(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.BankAccounts", t => t.BankAccountId)
+                .ForeignKey("dbo.SubCategories", t => t.SubCategoryId)
+                .ForeignKey("dbo.BankAccounts", t => t.TargetBankAccountId)
+                .ForeignKey("dbo.BankAccounts", t => t.BankAccount_Id)
+                .Index(t => t.BankAccountId)
+                .Index(t => t.SubCategoryId)
+                .Index(t => t.TargetBankAccountId)
+                .Index(t => t.BankAccount_Id);
+            
+            CreateTable(
+                "dbo.SubCategories",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        SubCategoryName = c.String(nullable: false),
+                        CategoryId = c.Int(nullable: false),
+                        IsExpense = c.Boolean(nullable: false),
+                        IsIncome = c.Boolean(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Categories", t => t.CategoryId, cascadeDelete: true)
+                .Index(t => t.CategoryId);
+            
+            CreateTable(
+                "dbo.Categories",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        CategoryName = c.String(nullable: false),
+                        IsExpense = c.Boolean(nullable: false),
+                        IsIncome = c.Boolean(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
             CreateTable(
                 "dbo.AspNetRoles",
                 c => new
@@ -83,17 +147,31 @@ namespace HomeBudget2.Migrations
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
+            DropForeignKey("dbo.FinancialOperations", "BankAccount_Id", "dbo.BankAccounts");
+            DropForeignKey("dbo.FinancialOperations", "TargetBankAccountId", "dbo.BankAccounts");
+            DropForeignKey("dbo.FinancialOperations", "SubCategoryId", "dbo.SubCategories");
+            DropForeignKey("dbo.SubCategories", "CategoryId", "dbo.Categories");
+            DropForeignKey("dbo.FinancialOperations", "BankAccountId", "dbo.BankAccounts");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
+            DropIndex("dbo.SubCategories", new[] { "CategoryId" });
+            DropIndex("dbo.FinancialOperations", new[] { "BankAccount_Id" });
+            DropIndex("dbo.FinancialOperations", new[] { "TargetBankAccountId" });
+            DropIndex("dbo.FinancialOperations", new[] { "SubCategoryId" });
+            DropIndex("dbo.FinancialOperations", new[] { "BankAccountId" });
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetRoles");
+            DropTable("dbo.Categories");
+            DropTable("dbo.SubCategories");
+            DropTable("dbo.FinancialOperations");
+            DropTable("dbo.BankAccounts");
         }
     }
 }

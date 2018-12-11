@@ -235,24 +235,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201804160707185_createDB.cs" />
-    <Compile Include="Migrations\201804160707185_createDB.Designer.cs">
-      <DependentUpon>201804160707185_createDB.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201804160749344_AddedModels.cs" />
-    <Compile Include="Migrations\201804160749344_AddedModels.Designer.cs">
-      <DependentUpon>201804160749344_AddedModels.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201804190656497_FinancialOperationClassChanged.cs" />
-    <Compile Include="Migrations\201804190656497_FinancialOperationClassChanged.Designer.cs">
-      <DependentUpon>201804190656497_FinancialOperationClassChanged.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201804190954076_FinancialOperationClassChanged1.cs" />
-    <Compile Include="Migrations\201804190954076_FinancialOperationClassChanged1.Designer.cs">
-      <DependentUpon>201804190954076_FinancialOperationClassChanged1.cs</DependentUpon>
+    <Compile Include="Migrations\201812112125098_AddedModel.cs" />
+    <Compile Include="Migrations\201812112125098_AddedModel.Designer.cs">
+      <DependentUpon>201812112125098_AddedModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\BankAccount.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\FinancialOperation.cs" />
@@ -410,17 +399,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201804160707185_createDB.resx">
-      <DependentUpon>201804160707185_createDB.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201804160749344_AddedModels.resx">
-      <DependentUpon>201804160749344_AddedModels.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201804190656497_FinancialOperationClassChanged.resx">
-      <DependentUpon>201804190656497_FinancialOperationClassChanged.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201804190954076_FinancialOperationClassChanged1.resx">
-      <DependentUpon>201804190954076_FinancialOperationClassChanged1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201812112125098_AddedModel.resx">
+      <DependentUpon>201812112125098_AddedModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
