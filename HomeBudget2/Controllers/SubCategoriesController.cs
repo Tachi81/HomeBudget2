@@ -153,7 +153,15 @@ namespace HomeBudget2.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             SubCategoryViewModel subCategoryVm = _subcategoryService.CreateSubCategoryViewModelWithSpecificId(id);
-            _subCategoryRepository.Delete(subCategoryVm.SubCategory);
+            if (_subcategoryService.CanBeDeleted(id))
+            {
+                _subCategoryRepository.Delete(subCategoryVm.SubCategory);
+            }
+            else
+            {
+                //todo: alert user that he can't delete
+            }
+
             if (subCategoryVm.SubCategory.IsExpense)
             {
                 return RedirectToAction("ExpenseSubCategoryIndex", "SubCategories");

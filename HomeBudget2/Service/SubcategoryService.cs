@@ -75,5 +75,13 @@ namespace HomeBudget2.Service
             var categories = _categoryRepository.GetWhere(category => category.Id > 0 && subCategoryVm.SubCategory.IsExpense ? category.IsExpense : category.IsIncome);
             subCategoryVm.SelectListOfCategories = new SelectList(categories, "Id", "CategoryName");
         }
+
+        public bool CanBeDeleted(int? id)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                return context.FinancialOperations.Where(fo => fo.SubCategoryId == id).ToList().Count == 0;
+            }
+        }
     }
 }
