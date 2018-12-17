@@ -1,6 +1,6 @@
 ﻿using HomeBudget2.DAL.Interfaces;
-using HomeBudget2.Models;
 using HomeBudget2.ViewModels;
+using Microsoft.AspNet.Identity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -14,7 +14,7 @@ namespace HomeBudget2.Controllers
 
         private readonly IFinancialOperationService _financialOperationService;
         private readonly IBankAccountLogic _bankAccountLogic;
-
+        private readonly string _userId;
 
         public FinancialOperationsController(IFinancialOperationRepository financialOperationRepository,
             IFinancialOperationService financialOperationService, IBankAccountLogic bankAccountLogic)
@@ -22,6 +22,7 @@ namespace HomeBudget2.Controllers
             _financialOperationRepository = financialOperationRepository;
             _financialOperationService = financialOperationService;
             _bankAccountLogic = bankAccountLogic;
+            _userId = User.Identity.GetUserId();
         }
 
 
@@ -58,7 +59,7 @@ namespace HomeBudget2.Controllers
             return View("Index", financialOperationVm);
         }
 
-        
+
         // GET: FinancialOperations - Incomes
         public ActionResult IncomesIndex()
         {
@@ -112,7 +113,7 @@ namespace HomeBudget2.Controllers
 
                 _financialOperationRepository.Create(financialOperationVm.FinancialOperation);
 
-                _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem();
+                _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(_userId);
 
                 return RedirectToAction(_financialOperationService.ChooseActionToGo(financialOperationVm));
             }
@@ -155,7 +156,7 @@ namespace HomeBudget2.Controllers
                 _financialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
                 _financialOperationRepository.Update(financialOperationVm.FinancialOperation);
 
-                _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem();
+                _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(_userId);
                 return RedirectToAction(_financialOperationService.ChooseActionToGo(financialOperationVm));
             }
             _financialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
@@ -192,7 +193,7 @@ namespace HomeBudget2.Controllers
             financialOperationVm.FinancialOperation =
                 _financialOperationRepository.GetWhere(fo => fo.Id == id).FirstOrDefault();
             _financialOperationRepository.Delete(financialOperationVm.FinancialOperation);
-            _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem();
+            _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(_userId);
             return RedirectToAction(_financialOperationService.ChooseActionToGo(financialOperationVm));
         }
 

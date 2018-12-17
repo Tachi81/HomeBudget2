@@ -1,5 +1,6 @@
 ﻿using HomeBudget2.DAL.Interfaces;
 using HomeBudget2.ViewModels;
+using Microsoft.AspNet.Identity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -11,18 +12,21 @@ namespace HomeBudget2.Controllers
     {
         private readonly IBankAccountRepository _bankAccountRepository;
         private readonly IBankAccountLogic _bankAccountLogic;
+        private string _userId;
 
         public BankAccountsController(IBankAccountRepository bankAccountRepository, IBankAccountLogic bankAccountLogic)
         {
             _bankAccountRepository = bankAccountRepository;
             _bankAccountLogic = bankAccountLogic;
+            _userId = User.Identity.GetUserId();
         }
 
         // GET: BankAccounts
         public ActionResult Index()
         {
             var bankaccountVm = new BankAccountViewModel();
-            bankaccountVm.BankAccountsList = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id > 0);
+
+            bankaccountVm.BankAccountsList = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id > 0 && bankAccount.UserId == _userId);
 
             return View(bankaccountVm);
         }
@@ -35,7 +39,7 @@ namespace HomeBudget2.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var bankaccountVm = new BankAccountViewModel();
-            bankaccountVm.BankAccount = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id == id).FirstOrDefault();
+            bankaccountVm.BankAccount = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id == id && bankAccount.UserId == _userId).FirstOrDefault();
             if (bankaccountVm.BankAccount == null)
             {
                 return HttpNotFound();
@@ -62,6 +66,7 @@ namespace HomeBudget2.Controllers
             if (ModelState.IsValid)
             {
                 bankAccountVm.BankAccount.Balance = bankAccountVm.BankAccount.InitialBalance;
+                bankAccountVm.BankAccount.UserId = _userId;
                 _bankAccountRepository.Create(bankAccountVm.BankAccount);
                 return RedirectToAction("Index");
             }
@@ -77,7 +82,7 @@ namespace HomeBudget2.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var bankaccountVm = new BankAccountViewModel();
-            bankaccountVm.BankAccount = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id == id).FirstOrDefault();
+            bankaccountVm.BankAccount = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id == id && bankAccount.UserId == _userId).FirstOrDefault();
             if (bankaccountVm.BankAccount == null)
             {
                 return HttpNotFound();
@@ -94,7 +99,7 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
-                _bankAccountLogic.CalculateBalanceOfSelectedAccount(bankAccountVm);
+                _bankAccountLogic.CalculateBalanceOfSelectedAccount(bankAccountVm.BankAccount);
                 _bankAccountRepository.Update(bankAccountVm.BankAccount);
                 return RedirectToAction("Index");
             }
@@ -110,7 +115,7 @@ namespace HomeBudget2.Controllers
             }
             var bankaccountVm = new BankAccountViewModel();
 
-            bankaccountVm.BankAccount = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id == id).FirstOrDefault();
+            bankaccountVm.BankAccount = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id == id && bankAccount.UserId == _userId).FirstOrDefault();
             if (bankaccountVm.BankAccount == null)
             {
                 return HttpNotFound();
@@ -125,7 +130,7 @@ namespace HomeBudget2.Controllers
         {
             var bankaccountVm = new BankAccountViewModel();
 
-            bankaccountVm.BankAccount = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id == id).FirstOrDefault();
+            bankaccountVm.BankAccount = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id == id && bankAccount.UserId == _userId).FirstOrDefault();
 
             _bankAccountRepository.Delete(bankaccountVm.BankAccount);
             return RedirectToAction("Index");
