@@ -14,7 +14,7 @@ namespace HomeBudget2.Controllers
 
         private readonly IFinancialOperationService _financialOperationService;
         private readonly IBankAccountLogic _bankAccountLogic;
-        private readonly string _userId;
+
 
         public FinancialOperationsController(IFinancialOperationRepository financialOperationRepository,
             IFinancialOperationService financialOperationService, IBankAccountLogic bankAccountLogic)
@@ -22,7 +22,7 @@ namespace HomeBudget2.Controllers
             _financialOperationRepository = financialOperationRepository;
             _financialOperationService = financialOperationService;
             _bankAccountLogic = bankAccountLogic;
-            _userId = User.Identity.GetUserId();
+
         }
 
 
@@ -31,6 +31,8 @@ namespace HomeBudget2.Controllers
         public ActionResult HistoryChooseAccount()
         {
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
+            var userId = User.Identity.GetUserId();
+            financialOperationVm.UserId = userId;
             _financialOperationService.AddSelectListsToViewModel(financialOperationVm, true);
 
             return View("HistoryChooseAccount", financialOperationVm);
@@ -54,7 +56,8 @@ namespace HomeBudget2.Controllers
         {
             bool IsExpense = true;
             bool IsIncome = false;
-            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome);
+            var userId = User.Identity.GetUserId();
+            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome, userId);
 
             return View("Index", financialOperationVm);
         }
@@ -65,7 +68,8 @@ namespace HomeBudget2.Controllers
         {
             bool IsExpense = false;
             bool IsIncome = true;
-            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome);
+            var userId = User.Identity.GetUserId();
+            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome, userId);
 
             return View("Index", financialOperationVm);
         }
@@ -75,7 +79,8 @@ namespace HomeBudget2.Controllers
         {
             bool IsExpense = false;
             bool IsIncome = false;
-            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome);
+            var userId = User.Identity.GetUserId();
+            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome, userId);
 
 
             return View("Index", financialOperationVm);
@@ -109,11 +114,14 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userId = User.Identity.GetUserId();
+                financialOperationVm.UserId = userId;
+
                 _financialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
 
                 _financialOperationRepository.Create(financialOperationVm.FinancialOperation);
 
-                _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(_userId);
+                _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
 
                 return RedirectToAction(_financialOperationService.ChooseActionToGo(financialOperationVm));
             }
@@ -156,7 +164,9 @@ namespace HomeBudget2.Controllers
                 _financialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
                 _financialOperationRepository.Update(financialOperationVm.FinancialOperation);
 
-                _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(_userId);
+                var userId = User.Identity.GetUserId();
+                financialOperationVm.UserId = userId;
+                _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
                 return RedirectToAction(_financialOperationService.ChooseActionToGo(financialOperationVm));
             }
             _financialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
@@ -193,7 +203,9 @@ namespace HomeBudget2.Controllers
             financialOperationVm.FinancialOperation =
                 _financialOperationRepository.GetWhere(fo => fo.Id == id).FirstOrDefault();
             _financialOperationRepository.Delete(financialOperationVm.FinancialOperation);
-            _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(_userId);
+
+            var userId = User.Identity.GetUserId();
+            _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
             return RedirectToAction(_financialOperationService.ChooseActionToGo(financialOperationVm));
         }
 
