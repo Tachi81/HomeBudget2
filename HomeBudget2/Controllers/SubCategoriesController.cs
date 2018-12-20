@@ -1,5 +1,6 @@
 ﻿using HomeBudget2.DAL.Interfaces;
 using HomeBudget2.ViewModels;
+using Microsoft.AspNet.Identity;
 using System.Net;
 using System.Web.Mvc;
 
@@ -21,7 +22,7 @@ namespace HomeBudget2.Controllers
         public ActionResult ExpenseSubCategoryIndex()
         {
             bool isSubCategoryAnExpenseSubCat = true;
-            SubCategoryViewModel subCategoryVm = _subcategoryService.CreateSubCatVmWithListOfSubCat(isSubCategoryAnExpenseSubCat);
+            SubCategoryViewModel subCategoryVm = _subcategoryService.CreateSubCatVmWithListOfSubCat(isSubCategoryAnExpenseSubCat, User.Identity.GetUserId());
             return View("Index", subCategoryVm);
 
         }
@@ -30,7 +31,7 @@ namespace HomeBudget2.Controllers
         public ActionResult IncomeSubCategoryIndex()
         {
             bool isSubCategoryAnExpenseSubCat = false;
-            var subCategoryVm = _subcategoryService.CreateSubCatVmWithListOfSubCat(isSubCategoryAnExpenseSubCat);
+            var subCategoryVm = _subcategoryService.CreateSubCatVmWithListOfSubCat(isSubCategoryAnExpenseSubCat, User.Identity.GetUserId());
             return View("Index", subCategoryVm);
 
         }
@@ -58,7 +59,7 @@ namespace HomeBudget2.Controllers
         public ActionResult CreateExpenseSubCategory()
         {
             bool isExpense = true;
-            SubCategoryViewModel subCategoryVm = _subcategoryService.CreateSubCatVmWithSubCatAndWithSelectList(isExpense);
+            SubCategoryViewModel subCategoryVm = _subcategoryService.CreateSubCatVmWithSubCatAndWithSelectList(isExpense, User.Identity.GetUserId());
             return View("Create", subCategoryVm);
         }
 
@@ -66,7 +67,7 @@ namespace HomeBudget2.Controllers
         public ActionResult CreateIncomeSubCategory()
         {
             bool isExpense = false;
-            SubCategoryViewModel subCategoryVm = _subcategoryService.CreateSubCatVmWithSubCatAndWithSelectList(isExpense);
+            SubCategoryViewModel subCategoryVm = _subcategoryService.CreateSubCatVmWithSubCatAndWithSelectList(isExpense, User.Identity.GetUserId());
             return View("Create", subCategoryVm);
         }
 
@@ -79,6 +80,8 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userId = User.Identity.GetUserId();
+                subCategoryVm.SubCategory.UserId = userId;
                 _subCategoryRepository.Create(subCategoryVm.SubCategory);
                 if (subCategoryVm.SubCategory.IsExpense)
                 {
@@ -87,7 +90,7 @@ namespace HomeBudget2.Controllers
                 return RedirectToAction("IncomeSubCategoryIndex", "SubCategories");
             }
 
-            _subcategoryService.AddSelectListOfCategoriesToSubCategoryVm(subCategoryVm);
+            _subcategoryService.AddSelectListOfCategoriesToSubCategoryVm(subCategoryVm, User.Identity.GetUserId());
             return View(subCategoryVm);
         }
 
@@ -105,7 +108,7 @@ namespace HomeBudget2.Controllers
             {
                 return HttpNotFound();
             }
-            _subcategoryService.AddSelectListOfCategoriesToSubCategoryVm(subCategoryVm);
+            _subcategoryService.AddSelectListOfCategoriesToSubCategoryVm(subCategoryVm, User.Identity.GetUserId());
 
             return View(subCategoryVm);
         }
@@ -119,6 +122,8 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userId = User.Identity.GetUserId();
+                subCategoryVm.SubCategory.UserId = userId;
                 _subCategoryRepository.Update(subCategoryVm.SubCategory);
                 if (subCategoryVm.SubCategory.IsExpense)
                 {
@@ -127,7 +132,7 @@ namespace HomeBudget2.Controllers
                 return RedirectToAction("IncomeSubCategoryIndex", "SubCategories");
             }
 
-            _subcategoryService.AddSelectListOfCategoriesToSubCategoryVm(subCategoryVm);
+            _subcategoryService.AddSelectListOfCategoriesToSubCategoryVm(subCategoryVm, User.Identity.GetUserId());
 
             return View(subCategoryVm);
         }

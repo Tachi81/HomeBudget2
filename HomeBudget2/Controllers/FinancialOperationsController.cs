@@ -115,9 +115,11 @@ namespace HomeBudget2.Controllers
             if (ModelState.IsValid)
             {
                 var userId = User.Identity.GetUserId();
-                financialOperationVm.UserId = userId;
+                financialOperationVm.FinancialOperation.UserId = userId;
 
                 _financialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
+
+
 
                 _financialOperationRepository.Create(financialOperationVm.FinancialOperation);
 
@@ -148,6 +150,9 @@ namespace HomeBudget2.Controllers
             {
                 return HttpNotFound();
             }
+
+            var userId = User.Identity.GetUserId();
+            financialOperationVm.UserId = userId;
             _financialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
             return View(financialOperationVm);
         }
@@ -162,10 +167,12 @@ namespace HomeBudget2.Controllers
             if (ModelState.IsValid)
             {
                 _financialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
-                _financialOperationRepository.Update(financialOperationVm.FinancialOperation);
 
                 var userId = User.Identity.GetUserId();
-                financialOperationVm.UserId = userId;
+                financialOperationVm.FinancialOperation.UserId = userId;
+
+                _financialOperationRepository.Update(financialOperationVm.FinancialOperation);
+
                 _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
                 return RedirectToAction(_financialOperationService.ChooseActionToGo(financialOperationVm));
             }

@@ -26,8 +26,14 @@ namespace HomeBudget2.Service
         {
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
             financialOperationVm.ListOfFinancialOperations =
-                _financialOperationRepository
-                    .GetWhereWithIncludes(fo => fo.Id > 0 && fo.UserId == userId && isExpense ? fo.IsExpense : isIncome ? fo.IsIncome : fo.IsTransfer, fo => fo.SubCategory, fo => fo.SubCategory.Category).OrderByDescending(fo => fo.DateTime).ToList();
+                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0
+                                                                         && fo.UserId == userId
+                                                                         && fo.IsExpense == isExpense
+                                                                         && fo.IsIncome == isIncome
+                                                                         && fo.IsTransfer == (!isExpense && !isIncome)
+                    , fo => fo.SubCategory, fo => fo.SubCategory.Category)
+                    .OrderByDescending(fo => fo.DateTime)
+                    .ToList();
             financialOperationVm.FinancialOperation = new FinancialOperation()
             {
                 IsExpense = isExpense,
@@ -44,7 +50,8 @@ namespace HomeBudget2.Service
         public void AddSelectListsToViewModel(FinancialOperationViewModel financialOperationVm, bool isExpense)
         {
             var bankaccounts = _bankAccountRepository.GetWhere(ba => ba.Id > 0 && ba.UserId == financialOperationVm.UserId);
-            var subcategories = _subCategoryRepository.GetWhere(sc => sc.Id > 0 && sc.UserId == financialOperationVm.UserId && isExpense ? sc.IsExpense : sc.IsIncome);
+            var subcategories = _subCategoryRepository.
+                GetWhere(sc => sc.Id > 0 && sc.UserId == financialOperationVm.UserId && sc.IsExpense == isExpense && sc.IsIncome == !isExpense);
             financialOperationVm.SelectListOfBankAccounts = new SelectList(bankaccounts, "Id", "AccountName");
             financialOperationVm.SelectListOfSubCategories = new SelectList(subcategories, "Id", "SubCategoryName");
         }
