@@ -12,7 +12,7 @@ namespace HomeBudget2.DAL
         public IFinancialOperationRepository FinancialOperatiosRepo { get ; set ; }
         public ISubCategoryRepository subCategoryRepo { get ; set ; }
 
-        UnitOfWork(ApplicationDbContext context)
+       public UnitOfWork(ApplicationDbContext context)
         {
             BankAccountRepo = new BankAccountRepository(context);
             CategoryRepo = new CategoryRepository(context);

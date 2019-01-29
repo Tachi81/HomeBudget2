@@ -1,10 +1,7 @@
 ﻿using HomeBudget2;
-using HomeBudget2.BusinessLogic;
-using HomeBudget2.DAL.Interfaces;
-using HomeBudget2.DAL.Repositories;
-using HomeBudget2.Service;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Ninject;
+using Ninject.Extensions.Conventions;
 using Ninject.Web.Common;
 using Ninject.Web.Common.WebHost;
 using System;
@@ -40,20 +37,17 @@ namespace HomeBudget2
             kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
             RegisterServices(kernel);
+            kernel.Bind(x =>
+            {
+                x.FromThisAssembly()
+                .SelectAllClasses()
+                .BindDefaultInterface();
+            });
             return kernel;
         }
         private static void RegisterServices(IKernel kernel)
         {
-            //kernel.Bind<IRepo>().ToMethod(ctx => new Repo("Ninject Rocks!"));
-            kernel.Bind<IFinancialOperationRepository>().To<FinancialOperationRepository>();
-            kernel.Bind<IBankAccountRepository>().To<BankAccountRepository>();
-            kernel.Bind<ICategoryRepository>().To<CategoryRepository>();
-            kernel.Bind<ISubCategoryRepository>().To<SubCategoryRepository>();
-
-
-            kernel.Bind<ISubcategoryService>().To<SubcategoryService>();
-            kernel.Bind<IFinancialOperationService>().To<FinancialOperationService>();
-            kernel.Bind<IBankAccountLogic>().To<BankAccountLogic>();
+            //kernel.Bind<IRepo>().ToMethod(ctx => new Repo("Ninject Rocks!"));          
 
         }
     }

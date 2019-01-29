@@ -7,7 +7,7 @@
         IFinancialOperationRepository FinancialOperatiosRepo { get; set; }
         ISubCategoryRepository subCategoryRepo { get; set; }
 
-        void Complete();
+       void Complete();
 
 
     }
