@@ -8,17 +8,12 @@ using System.Web.Mvc;
 namespace HomeBudget2.Service
 {
     public class FinancialOperationService : IFinancialOperationService
-    {
+    {        
+        private readonly IUnitOfWork _unitOfWork;
 
-        private readonly IBankAccountRepository _bankAccountRepository;
-        private readonly ISubCategoryRepository _subCategoryRepository;
-        private readonly IFinancialOperationRepository _financialOperationRepository;
-
-        public FinancialOperationService(IBankAccountRepository bankAccountRepository, ISubCategoryRepository subCategoryRepository, IFinancialOperationRepository financialOperationRepository)
-        {
-            _bankAccountRepository = bankAccountRepository;
-            _subCategoryRepository = subCategoryRepository;
-            _financialOperationRepository = financialOperationRepository;
+        public FinancialOperationService(IUnitOfWork unitOfWork)
+        {           
+            _unitOfWork = unitOfWork;
         }
 
 
@@ -26,7 +21,7 @@ namespace HomeBudget2.Service
         {
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
             financialOperationVm.ListOfFinancialOperations =
-                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0 && isExpense ? fo.IsExpense : isIncome ? fo.IsIncome : fo.IsTransfer, fo => fo.SubCategory, fo => fo.SubCategory.Category).OrderByDescending(fo => fo.DateTime).ToList();
+                _unitOfWork.FinancialOperatiosRepo.GetWhereWithIncludes(fo => fo.Id > 0 && isExpense ? fo.IsExpense : isIncome ? fo.IsIncome : fo.IsTransfer, fo => fo.SubCategory, fo => fo.SubCategory.Category).OrderByDescending(fo => fo.DateTime).ToList();
             financialOperationVm.FinancialOperation = new FinancialOperation()
             {
                 IsExpense = isExpense,
@@ -40,8 +35,8 @@ namespace HomeBudget2.Service
 
         public void AddSelectListsToViewModel(FinancialOperationViewModel financialOperationVm, bool isExpense)
         {
-            var bankaccounts = _bankAccountRepository.GetWhere(ba => ba.Id > 0);
-            var subcategories = _subCategoryRepository.GetWhere(sc => sc.Id > 0 && isExpense ? sc.IsExpense : sc.IsIncome);
+            var bankaccounts = _unitOfWork.BankAccountRepo.GetWhere(ba => ba.Id > 0);
+            var subcategories = _unitOfWork.SubCategoryRepo.GetWhere(sc => sc.Id > 0 && isExpense ? sc.IsExpense : sc.IsIncome);
             financialOperationVm.SelectListOfBankAccounts = new SelectList(bankaccounts, "Id", "AccountName");
             financialOperationVm.SelectListOfSubCategories = new SelectList(subcategories, "Id", "SubCategoryName");
         }
@@ -65,16 +60,16 @@ namespace HomeBudget2.Service
 
         public FinancialOperationViewModel FulfillHistoryViewModelWithFinancialOperationAndListOfFinancialOperations(FinancialOperationViewModel financialOperationVm)
         {
-            financialOperationVm.FinancialOperation.BankAccount = _bankAccountRepository
+            financialOperationVm.FinancialOperation.BankAccount = _unitOfWork.BankAccountRepo
                 .GetWhere(ba => ba.Id == financialOperationVm.FinancialOperation.BankAccountId).FirstOrDefault();
 
             financialOperationVm.ListOfFinancialOperations = new List<FinancialOperation>();
 
-            List<FinancialOperation> expensesList = _financialOperationRepository.GetWhere(fo =>
+            List<FinancialOperation> expensesList = _unitOfWork.FinancialOperatiosRepo.GetWhere(fo =>
                 fo.BankAccountId == financialOperationVm.FinancialOperation.BankAccountId);
             expensesList.ForEach(expense => expense.AmountOfMoney *= (-1));
 
-            List<FinancialOperation> incomesList = _financialOperationRepository.GetWhere(fo =>
+            List<FinancialOperation> incomesList = _unitOfWork.FinancialOperatiosRepo.GetWhere(fo =>
                 fo.TargetBankAccountId == financialOperationVm.FinancialOperation.BankAccountId);
 
 
@@ -89,13 +84,13 @@ namespace HomeBudget2.Service
 
         public void SetSourceOfMoneyAndDestinationOfMoney(FinancialOperationViewModel financialOperationVm)
         {
-            var bankAccount = _bankAccountRepository
+            var bankAccount = _unitOfWork.BankAccountRepo
                 .GetWhere(ba => ba.Id == financialOperationVm.FinancialOperation.BankAccountId).FirstOrDefault();
 
-            var subCategory = _subCategoryRepository
+            var subCategory = _unitOfWork.SubCategoryRepo
                 .GetWhere(sc => sc.Id == financialOperationVm.FinancialOperation.SubCategoryId).FirstOrDefault();
 
-            var targetAccount = _bankAccountRepository
+            var targetAccount = _unitOfWork.BankAccountRepo
                 .GetWhere(ba => ba.Id == financialOperationVm.FinancialOperation.TargetBankAccountId).FirstOrDefault();
 
             if (financialOperationVm.FinancialOperation.IsExpense)

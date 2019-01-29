@@ -4,5 +4,6 @@ namespace HomeBudget2.DAL.Interfaces
 {
     public interface IBankAccountRepository : IAbstractRepository<BankAccount>
     {
+       
     }
 }

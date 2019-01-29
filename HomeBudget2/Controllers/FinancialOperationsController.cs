@@ -1,5 +1,4 @@
 ﻿using HomeBudget2.DAL.Interfaces;
-using HomeBudget2.Models;
 using HomeBudget2.ViewModels;
 using System.Linq;
 using System.Net;
@@ -10,18 +9,12 @@ namespace HomeBudget2.Controllers
     [Authorize]
     public class FinancialOperationsController : Controller
     {
-        private readonly IFinancialOperationRepository _financialOperationRepository;
+       
+        private readonly IUnitOfWork _unitOfWork;
 
-        private readonly IFinancialOperationService _financialOperationService;
-        private readonly IBankAccountLogic _bankAccountLogic;
-
-
-        public FinancialOperationsController(IFinancialOperationRepository financialOperationRepository,
-            IFinancialOperationService financialOperationService, IBankAccountLogic bankAccountLogic)
-        {
-            _financialOperationRepository = financialOperationRepository;
-            _financialOperationService = financialOperationService;
-            _bankAccountLogic = bankAccountLogic;
+        public FinancialOperationsController(IUnitOfWork unitOfWork)
+        {          
+            _unitOfWork = unitOfWork;
         }
 
 
@@ -30,7 +23,7 @@ namespace HomeBudget2.Controllers
         public ActionResult HistoryChooseAccount()
         {
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
-            _financialOperationService.AddSelectListsToViewModel(financialOperationVm, true);
+            _unitOfWork.FinancialOperationService.AddSelectListsToViewModel(financialOperationVm, true);
 
             return View("HistoryChooseAccount", financialOperationVm);
         }
@@ -43,7 +36,7 @@ namespace HomeBudget2.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            _financialOperationService.FulfillHistoryViewModelWithFinancialOperationAndListOfFinancialOperations(financialOperationVm);
+            _unitOfWork.FinancialOperationService.FulfillHistoryViewModelWithFinancialOperationAndListOfFinancialOperations(financialOperationVm);
 
             return View("History", financialOperationVm);
         }
@@ -53,7 +46,7 @@ namespace HomeBudget2.Controllers
         {
             bool IsExpense = true;
             bool IsIncome = false;
-            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome);
+            FinancialOperationViewModel financialOperationVm = _unitOfWork.FinancialOperationService.CreateViewModelWithAll(IsExpense, IsIncome);
 
             return View("Index", financialOperationVm);
         }
@@ -64,7 +57,7 @@ namespace HomeBudget2.Controllers
         {
             bool IsExpense = false;
             bool IsIncome = true;
-            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome);
+            FinancialOperationViewModel financialOperationVm = _unitOfWork.FinancialOperationService.CreateViewModelWithAll(IsExpense, IsIncome);
 
             return View("Index", financialOperationVm);
         }
@@ -74,7 +67,7 @@ namespace HomeBudget2.Controllers
         {
             bool IsExpense = false;
             bool IsIncome = false;
-            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome);
+            FinancialOperationViewModel financialOperationVm = _unitOfWork.FinancialOperationService.CreateViewModelWithAll(IsExpense, IsIncome);
 
 
             return View("Index", financialOperationVm);
@@ -89,7 +82,7 @@ namespace HomeBudget2.Controllers
             }
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
             financialOperationVm.FinancialOperation =
-                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id == id, fo => fo.SubCategory, fo => fo.SubCategory.Category).FirstOrDefault();
+                _unitOfWork.FinancialOperatiosRepo.GetWhereWithIncludes(fo => fo.Id == id, fo => fo.SubCategory, fo => fo.SubCategory.Category).FirstOrDefault();
 
             if (financialOperationVm.FinancialOperation == null)
             {
@@ -108,16 +101,17 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
-                _financialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
+                _unitOfWork.FinancialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
 
-                _financialOperationRepository.Create(financialOperationVm.FinancialOperation);
+                _unitOfWork.FinancialOperatiosRepo.Create(financialOperationVm.FinancialOperation);
 
-                _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem();
+                _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem();
+                _unitOfWork.Complete();
 
-                return RedirectToAction(_financialOperationService.ChooseActionToGo(financialOperationVm));
+                return RedirectToAction(_unitOfWork.FinancialOperationService.ChooseActionToGo(financialOperationVm));
             }
 
-            _financialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
+            _unitOfWork.FinancialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
 
             return View(financialOperationVm);
         }
@@ -133,13 +127,13 @@ namespace HomeBudget2.Controllers
             }
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
             financialOperationVm.FinancialOperation =
-                _financialOperationRepository.GetWhere(fo => fo.Id == id).FirstOrDefault();
+                _unitOfWork.FinancialOperatiosRepo.GetWhere(fo => fo.Id == id).FirstOrDefault();
 
             if (financialOperationVm.FinancialOperation == null)
             {
                 return HttpNotFound();
             }
-            _financialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
+            _unitOfWork.FinancialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
             return View(financialOperationVm);
         }
 
@@ -152,13 +146,14 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
-                _financialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
-                _financialOperationRepository.Update(financialOperationVm.FinancialOperation);
+                _unitOfWork.FinancialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
+                _unitOfWork.FinancialOperatiosRepo.Update(financialOperationVm.FinancialOperation);
 
-                _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem();
-                return RedirectToAction(_financialOperationService.ChooseActionToGo(financialOperationVm));
+                 _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem();
+                _unitOfWork.Complete();
+                return RedirectToAction(_unitOfWork.FinancialOperationService.ChooseActionToGo(financialOperationVm));
             }
-            _financialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
+            _unitOfWork.FinancialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
             return View(financialOperationVm);
         }
 
@@ -174,7 +169,7 @@ namespace HomeBudget2.Controllers
             }
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
             financialOperationVm.FinancialOperation =
-                _financialOperationRepository.GetWhere(fo => fo.Id == id).FirstOrDefault();
+                _unitOfWork.FinancialOperatiosRepo.GetWhere(fo => fo.Id == id).FirstOrDefault();
 
             if (financialOperationVm.FinancialOperation == null)
             {
@@ -190,10 +185,11 @@ namespace HomeBudget2.Controllers
         {
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
             financialOperationVm.FinancialOperation =
-                _financialOperationRepository.GetWhere(fo => fo.Id == id).FirstOrDefault();
-            _financialOperationRepository.Delete(financialOperationVm.FinancialOperation);
-            _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem();
-            return RedirectToAction(_financialOperationService.ChooseActionToGo(financialOperationVm));
+                _unitOfWork.FinancialOperatiosRepo.GetWhere(fo => fo.Id == id).FirstOrDefault();
+            _unitOfWork.FinancialOperatiosRepo.Delete(financialOperationVm.FinancialOperation);
+             _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem();
+            _unitOfWork.Complete();
+            return RedirectToAction(_unitOfWork.FinancialOperationService.ChooseActionToGo(financialOperationVm));
         }
 
 

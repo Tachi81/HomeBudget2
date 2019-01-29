@@ -2,12 +2,15 @@
 {
     public interface IUnitOfWork
     {
-         IBankAccountRepository BankAccountRepo{ get; set; }
-         ICategoryRepository CategoryRepo { get; set; }
+        IBankAccountRepository BankAccountRepo { get; set; }
+        ICategoryRepository CategoryRepo { get; set; }
         IFinancialOperationRepository FinancialOperatiosRepo { get; set; }
-        ISubCategoryRepository subCategoryRepo { get; set; }
+        ISubCategoryRepository SubCategoryRepo { get; set; }
+        IBankAccountLogic BankAccountLogic { get; set; }
+        IFinancialOperationService FinancialOperationService { get; set; }
+        ISubcategoryService subcategoryService { get; set; }
 
-       void Complete();
+        void Complete();
 
 
     }
