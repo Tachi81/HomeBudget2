@@ -7,11 +7,11 @@ namespace HomeBudget2.DAL.Interfaces
 
         SubCategoryViewModel CreateSubCategoryViewModelWithSpecificId(int? id);
 
-        SubCategoryViewModel CreateSubCatVmWithListOfSubCat(bool isSubCategoryAnExpenseSubCat);
+        SubCategoryViewModel CreateSubCatVmWithListOfSubCat(bool isSubCategoryAnExpenseSubCat, string userId);
 
-        SubCategoryViewModel CreateSubCatVmWithSubCatAndWithSelectList(bool isSubCategoryAnExpenseSubCat);
+        SubCategoryViewModel CreateSubCatVmWithSubCatAndWithSelectList(bool isSubCategoryAnExpenseSubCat, string userId);
 
-        void AddSelectListOfCategoriesToSubCategoryVm(SubCategoryViewModel subCategoryVm);
+        void AddSelectListOfCategoriesToSubCategoryVm(SubCategoryViewModel subCategoryVm, string userId);
 
         bool CanBeDeleted(int? id);
 

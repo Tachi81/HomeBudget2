@@ -1,5 +1,6 @@
 ﻿using HomeBudget2.DAL.Interfaces;
 using HomeBudget2.ViewModels;
+using Microsoft.AspNet.Identity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -12,17 +13,21 @@ namespace HomeBudget2.Controllers
         private readonly IBankAccountRepository _bankAccountRepository;
         private readonly IBankAccountLogic _bankAccountLogic;
 
+
         public BankAccountsController(IBankAccountRepository bankAccountRepository, IBankAccountLogic bankAccountLogic)
         {
             _bankAccountRepository = bankAccountRepository;
             _bankAccountLogic = bankAccountLogic;
+
         }
 
         // GET: BankAccounts
         public ActionResult Index()
         {
+            var userId = User.Identity.GetUserId();
             var bankaccountVm = new BankAccountViewModel();
-            bankaccountVm.BankAccountsList = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id > 0);
+
+            bankaccountVm.BankAccountsList = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id > 0 && bankAccount.UserId == userId);
 
             return View(bankaccountVm);
         }
@@ -34,6 +39,7 @@ namespace HomeBudget2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             var bankaccountVm = new BankAccountViewModel();
             bankaccountVm.BankAccount = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id == id).FirstOrDefault();
             if (bankaccountVm.BankAccount == null)
@@ -61,7 +67,9 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userId = User.Identity.GetUserId();
                 bankAccountVm.BankAccount.Balance = bankAccountVm.BankAccount.InitialBalance;
+                bankAccountVm.BankAccount.UserId = userId;
                 _bankAccountRepository.Create(bankAccountVm.BankAccount);
                 return RedirectToAction("Index");
             }
@@ -94,7 +102,9 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
-                _bankAccountLogic.CalculateBalanceOfSelectedAccount(bankAccountVm);
+                var userId = User.Identity.GetUserId();
+                bankAccountVm.BankAccount.UserId = userId;
+                _bankAccountLogic.CalculateBalanceOfSelectedAccount(bankAccountVm.BankAccount);
                 _bankAccountRepository.Update(bankAccountVm.BankAccount);
                 return RedirectToAction("Index");
             }
@@ -108,6 +118,7 @@ namespace HomeBudget2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             var bankaccountVm = new BankAccountViewModel();
 
             bankaccountVm.BankAccount = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id == id).FirstOrDefault();

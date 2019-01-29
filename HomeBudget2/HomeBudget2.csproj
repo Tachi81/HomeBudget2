@@ -250,6 +250,10 @@
     <Compile Include="Migrations\201812112125098_AddedModel.Designer.cs">
       <DependentUpon>201812112125098_AddedModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812172045466_AddedUser.cs" />
+    <Compile Include="Migrations\201812172045466_AddedUser.Designer.cs">
+      <DependentUpon>201812172045466_AddedUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -412,6 +416,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201812112125098_AddedModel.resx">
       <DependentUpon>201812112125098_AddedModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812172045466_AddedUser.resx">
+      <DependentUpon>201812172045466_AddedUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

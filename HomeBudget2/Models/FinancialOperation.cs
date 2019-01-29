@@ -24,6 +24,8 @@ namespace HomeBudget2.Models
 
         public virtual SubCategory SubCategory { get; set; }
 
+        public string UserId { get; set; }
+
 
 
         public bool IsTransfer { get; set; }

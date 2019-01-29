@@ -17,17 +17,26 @@ namespace HomeBudget2.Service
         }
 
 
-        public FinancialOperationViewModel CreateViewModelWithAll(bool isExpense, bool isIncome)
+        public FinancialOperationViewModel CreateViewModelWithAll(bool isExpense, bool isIncome, string userId)
         {
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
             financialOperationVm.ListOfFinancialOperations =
-                _unitOfWork.FinancialOperatiosRepo.GetWhereWithIncludes(fo => fo.Id > 0 && isExpense ? fo.IsExpense : isIncome ? fo.IsIncome : fo.IsTransfer, fo => fo.SubCategory, fo => fo.SubCategory.Category).OrderByDescending(fo => fo.DateTime).ToList();
+                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0
+                                                                         && fo.UserId == userId
+                                                                         && fo.IsExpense == isExpense
+                                                                         && fo.IsIncome == isIncome
+                                                                         && fo.IsTransfer == (!isExpense && !isIncome)
+                    , fo => fo.SubCategory, fo => fo.SubCategory.Category)
+                    .OrderByDescending(fo => fo.DateTime)
+                    .ToList();
             financialOperationVm.FinancialOperation = new FinancialOperation()
             {
                 IsExpense = isExpense,
                 IsIncome = isIncome,
-                IsTransfer = !isExpense && !isIncome
+                IsTransfer = !isExpense && !isIncome,
+                UserId = userId
             };
+            financialOperationVm.UserId = userId;
 
             AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
             return financialOperationVm;
@@ -35,8 +44,9 @@ namespace HomeBudget2.Service
 
         public void AddSelectListsToViewModel(FinancialOperationViewModel financialOperationVm, bool isExpense)
         {
-            var bankaccounts = _unitOfWork.BankAccountRepo.GetWhere(ba => ba.Id > 0);
-            var subcategories = _unitOfWork.SubCategoryRepo.GetWhere(sc => sc.Id > 0 && isExpense ? sc.IsExpense : sc.IsIncome);
+            var bankaccounts = _bankAccountRepository.GetWhere(ba => ba.Id > 0 && ba.UserId == financialOperationVm.UserId);
+            var subcategories = _subCategoryRepository.
+                GetWhere(sc => sc.Id > 0 && sc.UserId == financialOperationVm.UserId && sc.IsExpense == isExpense && sc.IsIncome == !isExpense);
             financialOperationVm.SelectListOfBankAccounts = new SelectList(bankaccounts, "Id", "AccountName");
             financialOperationVm.SelectListOfSubCategories = new SelectList(subcategories, "Id", "SubCategoryName");
         }
@@ -67,10 +77,11 @@ namespace HomeBudget2.Service
 
             List<FinancialOperation> expensesList = _unitOfWork.FinancialOperatiosRepo.GetWhere(fo =>
                 fo.BankAccountId == financialOperationVm.FinancialOperation.BankAccountId);
+
             expensesList.ForEach(expense => expense.AmountOfMoney *= (-1));
 
-            List<FinancialOperation> incomesList = _unitOfWork.FinancialOperatiosRepo.GetWhere(fo =>
-                fo.TargetBankAccountId == financialOperationVm.FinancialOperation.BankAccountId);
+            List<FinancialOperation> incomesList = _financialOperationRepository
+                .GetWhere(fo => fo.TargetBankAccountId == financialOperationVm.FinancialOperation.BankAccountId);
 
 
             financialOperationVm.ListOfFinancialOperations.AddRange(expensesList);

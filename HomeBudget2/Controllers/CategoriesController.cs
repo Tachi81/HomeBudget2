@@ -1,5 +1,6 @@
 ﻿using HomeBudget2.DAL.Interfaces;
 using HomeBudget2.Models;
+using Microsoft.AspNet.Identity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -21,7 +22,8 @@ namespace HomeBudget2.Controllers
         // GET: ExpenseCategories Index
         public ActionResult ExpenseCategoryIndex()
         {
-            var categories = _unitOfWork.CategoryRepo.GetWhere(cat => cat.Id > 0 && cat.IsExpense);
+            var userId = User.Identity.GetUserId();
+            var categories = _categoryRepository.GetWhere(cat => cat.Id > 0 && cat.IsExpense && cat.UserId == userId);
             if (categories.Count == 0)
             {
                 Category category = new Category();
@@ -34,7 +36,8 @@ namespace HomeBudget2.Controllers
         // GET: IncomeCategories Index
         public ActionResult IncomeCategoryIndex()
         {
-            var categories = _unitOfWork.CategoryRepo.GetWhere(cat => cat.Id > 0 && cat.IsIncome);
+            var userId = User.Identity.GetUserId();
+            var categories = _categoryRepository.GetWhere(cat => cat.Id > 0 && cat.IsIncome && cat.UserId == userId);
             if (categories.Count == 0)
             {
                 Category category = new Category();
@@ -85,6 +88,9 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userId = User.Identity.GetUserId();
+                category.UserId = userId;
+                _categoryRepository.Create(category);
                 _unitOfWork.CategoryRepo.Create(category);
                 if (category.IsExpense)
                 {
@@ -120,6 +126,9 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userId = User.Identity.GetUserId();
+                category.UserId = userId;
+                _categoryRepository.Update(category);
                 _unitOfWork.CategoryRepo.Update(category);
                 _unitOfWork.Complete();
                 if (category.IsExpense)

@@ -10,6 +10,8 @@ namespace HomeBudget2.Models
         public bool IsExpense { get; set; }
         public bool IsIncome { get; set; }
 
+        public string UserId { get; set; }
+
         public virtual ICollection<SubCategory> Subcategories { get; set; }
     }
 }

@@ -9,6 +9,8 @@ namespace HomeBudget2.Models
         public double Balance { get; set; }
         public string AccountName { get; set; }
 
+        public string UserId { get; set; }
+
 
         public virtual ICollection<FinancialOperation> FinancialOperations { get; set; }
     }
