@@ -9,14 +9,12 @@
 
 @if (firstCategoryfromTheList.IsExpense)
 {
-    <h2>Expense Categories</h2>
+    <h2>List of Expense Categories</h2>
 }
 @if (firstCategoryfromTheList.IsIncome)
 {
-    <h2>Income Categories</h2>
+    <h2>List of Income Categories</h2>
 }
-
-<h3>Index</h3>
 
 @if (firstCategoryfromTheList.IsExpense)
 {
@@ -31,28 +29,32 @@
     </p>
 }
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.CategoryName)
-        </th>
-       
-        <th></th>
-    </tr>
+@if (firstCategoryfromTheList.CategoryName != null)
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
 
-    @foreach (var item in Model)
-    {
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.CategoryName)
             </td>
-           
+
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                 @Html.ActionLink("Details", "Details", new { id = item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>
-    }
+        }
 
-</table>
+    </table>
+}
+

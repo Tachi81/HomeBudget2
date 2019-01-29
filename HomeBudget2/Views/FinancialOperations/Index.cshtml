@@ -83,9 +83,9 @@
         }
 
         <div class="form-group">
-            @Html.LabelFor(model => model.FinancialOperation.DateTime, "Date", htmlAttributes: new { @class = "control-label col-md-2"})
+            @Html.LabelFor(model => model.FinancialOperation.DateTime, "Date", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.FinancialOperation.DateTime,  new { htmlAttributes = new { @class = "form-control datepicker " , @Value = @DateTime.Now.ToShortDateString() } })
+                @Html.EditorFor(model => model.FinancialOperation.DateTime, new { htmlAttributes = new { @class = "form-control datepicker ", @Value = @DateTime.Now.ToShortDateString() } })
                 @Html.ValidationMessageFor(model => model.FinancialOperation.DateTime, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -106,9 +106,20 @@
         </div>
     </div>
 }
-
-
-<h3>Index</h3>
+<h3>
+    @if (financialOperation.IsExpense)
+    {
+        @Html.DisplayName("List of Expenses")
+    }
+    @if (financialOperation.IsIncome)
+    {
+        @Html.DisplayName("List of Incomes")
+    }
+    @if (financialOperation.IsTransfer)
+    {
+        @Html.DisplayName("List of Transfers")
+    }
+</h3>
 
 
 <table class="table">
