@@ -23,7 +23,7 @@ namespace HomeBudget2.Controllers
         public ActionResult ExpenseCategoryIndex()
         {
             var userId = User.Identity.GetUserId();
-            var categories = _categoryRepository.GetWhere(cat => cat.Id > 0 && cat.IsExpense && cat.UserId == userId);
+            var categories = _unitOfWork.CategoryRepo.GetWhere(cat => cat.Id > 0 && cat.IsExpense && cat.UserId == userId);
             if (categories.Count == 0)
             {
                 Category category = new Category();
@@ -37,7 +37,7 @@ namespace HomeBudget2.Controllers
         public ActionResult IncomeCategoryIndex()
         {
             var userId = User.Identity.GetUserId();
-            var categories = _categoryRepository.GetWhere(cat => cat.Id > 0 && cat.IsIncome && cat.UserId == userId);
+            var categories = _unitOfWork.CategoryRepo.GetWhere(cat => cat.Id > 0 && cat.IsIncome && cat.UserId == userId);
             if (categories.Count == 0)
             {
                 Category category = new Category();
@@ -90,8 +90,8 @@ namespace HomeBudget2.Controllers
             {
                 var userId = User.Identity.GetUserId();
                 category.UserId = userId;
-                _categoryRepository.Create(category);
                 _unitOfWork.CategoryRepo.Create(category);
+                _unitOfWork.Complete();
                 if (category.IsExpense)
                 {
                     return RedirectToAction("ExpenseCategoryIndex", "Categories");
@@ -128,8 +128,7 @@ namespace HomeBudget2.Controllers
             {
                 var userId = User.Identity.GetUserId();
                 category.UserId = userId;
-                _categoryRepository.Update(category);
-                _unitOfWork.CategoryRepo.Update(category);
+                _unitOfWork.CategoryRepo.Update(category);             
                 _unitOfWork.Complete();
                 if (category.IsExpense)
                 {
@@ -165,7 +164,5 @@ namespace HomeBudget2.Controllers
             _unitOfWork.Complete();
             return RedirectToAction("ExpenseCategoryIndex");
         }
-
-
     }
 }

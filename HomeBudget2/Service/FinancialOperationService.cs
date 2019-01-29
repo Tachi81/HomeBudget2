@@ -21,7 +21,7 @@ namespace HomeBudget2.Service
         {
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
             financialOperationVm.ListOfFinancialOperations =
-                _financialOperationRepository.GetWhereWithIncludes(fo => fo.Id > 0
+                _unitOfWork.FinancialOperatiosRepo.GetWhereWithIncludes(fo => fo.Id > 0
                                                                          && fo.UserId == userId
                                                                          && fo.IsExpense == isExpense
                                                                          && fo.IsIncome == isIncome
@@ -44,8 +44,8 @@ namespace HomeBudget2.Service
 
         public void AddSelectListsToViewModel(FinancialOperationViewModel financialOperationVm, bool isExpense)
         {
-            var bankaccounts = _bankAccountRepository.GetWhere(ba => ba.Id > 0 && ba.UserId == financialOperationVm.UserId);
-            var subcategories = _subCategoryRepository.
+            var bankaccounts = _unitOfWork.BankAccountRepo.GetWhere(ba => ba.Id > 0 && ba.UserId == financialOperationVm.UserId);
+            var subcategories = _unitOfWork.SubCategoryRepo.
                 GetWhere(sc => sc.Id > 0 && sc.UserId == financialOperationVm.UserId && sc.IsExpense == isExpense && sc.IsIncome == !isExpense);
             financialOperationVm.SelectListOfBankAccounts = new SelectList(bankaccounts, "Id", "AccountName");
             financialOperationVm.SelectListOfSubCategories = new SelectList(subcategories, "Id", "SubCategoryName");
@@ -67,7 +67,6 @@ namespace HomeBudget2.Service
         }
 
 
-
         public FinancialOperationViewModel FulfillHistoryViewModelWithFinancialOperationAndListOfFinancialOperations(FinancialOperationViewModel financialOperationVm)
         {
             financialOperationVm.FinancialOperation.BankAccount = _unitOfWork.BankAccountRepo
@@ -80,9 +79,8 @@ namespace HomeBudget2.Service
 
             expensesList.ForEach(expense => expense.AmountOfMoney *= (-1));
 
-            List<FinancialOperation> incomesList = _financialOperationRepository
+            List<FinancialOperation> incomesList = _unitOfWork.FinancialOperatiosRepo
                 .GetWhere(fo => fo.TargetBankAccountId == financialOperationVm.FinancialOperation.BankAccountId);
-
 
             financialOperationVm.ListOfFinancialOperations.AddRange(expensesList);
             financialOperationVm.ListOfFinancialOperations.AddRange(incomesList);

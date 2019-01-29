@@ -19,14 +19,13 @@ namespace HomeBudget2.Controllers
         }
 
 
-
         // GET: FinancialOperations - HistoryChooseAccount
         public ActionResult HistoryChooseAccount()
         {
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
             var userId = User.Identity.GetUserId();
             financialOperationVm.UserId = userId;
-            _financialOperationService.AddSelectListsToViewModel(financialOperationVm, true);
+            _unitOfWork.FinancialOperationService.AddSelectListsToViewModel(financialOperationVm, true);
 
             return View("HistoryChooseAccount", financialOperationVm);
         }
@@ -50,7 +49,7 @@ namespace HomeBudget2.Controllers
             bool IsExpense = true;
             bool IsIncome = false;
             var userId = User.Identity.GetUserId();
-            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome, userId);
+            FinancialOperationViewModel financialOperationVm = _unitOfWork.FinancialOperationService.CreateViewModelWithAll(IsExpense, IsIncome, userId);
 
             return View("Index", financialOperationVm);
         }
@@ -62,7 +61,7 @@ namespace HomeBudget2.Controllers
             bool IsExpense = false;
             bool IsIncome = true;
             var userId = User.Identity.GetUserId();
-            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome, userId);
+            FinancialOperationViewModel financialOperationVm = _unitOfWork.FinancialOperationService.CreateViewModelWithAll(IsExpense, IsIncome, userId);
 
             return View("Index", financialOperationVm);
         }
@@ -73,7 +72,7 @@ namespace HomeBudget2.Controllers
             bool IsExpense = false;
             bool IsIncome = false;
             var userId = User.Identity.GetUserId();
-            FinancialOperationViewModel financialOperationVm = _financialOperationService.CreateViewModelWithAll(IsExpense, IsIncome, userId);
+            FinancialOperationViewModel financialOperationVm = _unitOfWork.FinancialOperationService.CreateViewModelWithAll(IsExpense, IsIncome, userId);
 
 
             return View("Index", financialOperationVm);
@@ -110,13 +109,11 @@ namespace HomeBudget2.Controllers
                 var userId = User.Identity.GetUserId();
                 financialOperationVm.FinancialOperation.UserId = userId;
 
-                _financialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
+                _unitOfWork.FinancialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
 
+                _unitOfWork.FinancialOperatiosRepo.Create(financialOperationVm.FinancialOperation);
 
-
-                _financialOperationRepository.Create(financialOperationVm.FinancialOperation);
-
-                _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem();
+                _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
                 _unitOfWork.Complete();
 
                 return RedirectToAction(_unitOfWork.FinancialOperationService.ChooseActionToGo(financialOperationVm));
@@ -126,8 +123,6 @@ namespace HomeBudget2.Controllers
 
             return View(financialOperationVm);
         }
-
-
 
         // GET: FinancialOperations/Edit/5
         public ActionResult Edit(int? id)
@@ -147,7 +142,7 @@ namespace HomeBudget2.Controllers
 
             var userId = User.Identity.GetUserId();
             financialOperationVm.UserId = userId;
-            _financialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
+            _unitOfWork.FinancialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
             return View(financialOperationVm);
         }
 
@@ -160,14 +155,14 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
-                _financialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
+                _unitOfWork.FinancialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
 
                 var userId = User.Identity.GetUserId();
                 financialOperationVm.FinancialOperation.UserId = userId;
 
-                _financialOperationRepository.Update(financialOperationVm.FinancialOperation);
+                _unitOfWork.FinancialOperatiosRepo.Update(financialOperationVm.FinancialOperation);
 
-                 _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem();
+                 _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
                 _unitOfWork.Complete();
                 return RedirectToAction(_unitOfWork.FinancialOperationService.ChooseActionToGo(financialOperationVm));
             }
@@ -175,9 +170,7 @@ namespace HomeBudget2.Controllers
             return View(financialOperationVm);
         }
 
-
-
-
+               
         // GET: FinancialOperations/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -203,12 +196,12 @@ namespace HomeBudget2.Controllers
         {
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
             financialOperationVm.FinancialOperation =
-                _financialOperationRepository.GetWhere(fo => fo.Id == id).FirstOrDefault();
-            _financialOperationRepository.Delete(financialOperationVm.FinancialOperation);
+                _unitOfWork.FinancialOperatiosRepo.GetWhere(fo => fo.Id == id).FirstOrDefault();
+            _unitOfWork.FinancialOperatiosRepo.Delete(financialOperationVm.FinancialOperation);
 
             var userId = User.Identity.GetUserId();
-            _bankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
-            return RedirectToAction(_financialOperationService.ChooseActionToGo(financialOperationVm));
+            _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
+            return RedirectToAction(_unitOfWork.FinancialOperationService.ChooseActionToGo(financialOperationVm));
         }
 
 

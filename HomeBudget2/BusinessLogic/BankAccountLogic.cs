@@ -15,13 +15,13 @@ namespace HomeBudget2.BusinessLogic
 
         public void CalculateBalanceOfAllAccountsAndUpdateThem(string userId)
         {
-            var bankAccountList = _bankAccountRepository.GetWhereWithIncludes(x => x.Id > 0 && x.UserId == userId).ToList();
+            var bankAccountList = _unitOfWork.BankAccountRepo.GetWhereWithIncludes(x => x.Id > 0 && x.UserId == userId).ToList();
             foreach (var bankAccount in bankAccountList)
             {
-                var sumOfExpenses = _financialOperationRepository.
+                var sumOfExpenses = _unitOfWork.FinancialOperatiosRepo.
                     GetWhere(financialOperation => financialOperation.BankAccountId == bankAccount.Id && financialOperation.UserId == userId)
                     .Sum(e => e.AmountOfMoney);
-                var sumOfIncomes = _financialOperationRepository
+                var sumOfIncomes = _unitOfWork.FinancialOperatiosRepo
                     .GetWhere(financialOperation => financialOperation.TargetBankAccountId == bankAccount.Id && financialOperation.UserId == userId)
                     .Sum(e => e.AmountOfMoney);
 
@@ -32,10 +32,10 @@ namespace HomeBudget2.BusinessLogic
 
         public BankAccount CalculateBalanceOfSelectedAccount(BankAccount bankAccount)
         {
-            var sumOfExpenses = _financialOperationRepository
+            var sumOfExpenses = _unitOfWork.FinancialOperatiosRepo
                 .GetWhere(financialOperation => financialOperation.BankAccountId == bankAccount.Id)
                 .Sum(e => e.AmountOfMoney);
-            var sumOfIncomes = _financialOperationRepository
+            var sumOfIncomes = _unitOfWork.FinancialOperatiosRepo
                 .GetWhere(financialOperation => financialOperation.TargetBankAccountId == bankAccount.Id)
                 .Sum(e => e.AmountOfMoney);
 
