@@ -201,6 +201,7 @@ namespace HomeBudget2.Controllers
 
             var userId = User.Identity.GetUserId();
             _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
+            _unitOfWork.Complete();
             return RedirectToAction(_unitOfWork.FinancialOperationService.ChooseActionToGo(financialOperationVm));
         }
 

@@ -19,6 +19,7 @@ namespace HomeBudget2.DAL
 
         public UnitOfWork(ApplicationDbContext context)
         {
+            _context = context;
             BankAccountRepo = new BankAccountRepository(context);
             CategoryRepo = new CategoryRepository(context);
             FinancialOperatiosRepo = new FinancialOperationRepository(context);

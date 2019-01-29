@@ -9,33 +9,38 @@
 <p>
     @Html.ActionLink("Create new Bank Account", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.BankAccount.AccountName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.BankAccount.Balance)
-        </th>
-       
-        <th></th>
-    </tr>
+@if (Model.BankAccountsList.Count > 0)
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BankAccount.AccountName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BankAccount.Balance)
+            </th>
 
-@foreach (var item in Model.BankAccountsList ) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.AccountName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Balance)
-        </td>
-        
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.BankAccountsList)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccountName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Balance)
+                </td>
+
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
 }
 
-</table>

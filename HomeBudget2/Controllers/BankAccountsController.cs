@@ -9,16 +9,12 @@ namespace HomeBudget2.Controllers
 {
     [Authorize]
     public class BankAccountsController : Controller
-    {
-        private readonly IBankAccountRepository _bankAccountRepository;
-        private readonly IBankAccountLogic _bankAccountLogic;
+    {       
+        private readonly IUnitOfWork _unitOfWork;
 
-
-        public BankAccountsController(IBankAccountRepository bankAccountRepository, IBankAccountLogic bankAccountLogic)
-        {
-            _bankAccountRepository = bankAccountRepository;
-            _bankAccountLogic = bankAccountLogic;
-
+        public BankAccountsController(IUnitOfWork unitOfWork)
+        {         
+            _unitOfWork = unitOfWork;
         }
 
         // GET: BankAccounts
@@ -27,7 +23,7 @@ namespace HomeBudget2.Controllers
             var userId = User.Identity.GetUserId();
             var bankaccountVm = new BankAccountViewModel();
 
-            bankaccountVm.BankAccountsList = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id > 0 && bankAccount.UserId == userId);
+            bankaccountVm.BankAccountsList = _unitOfWork.BankAccountRepo.GetWhere(bankAccount => bankAccount.Id > 0 && bankAccount.UserId == userId);
 
             return View(bankaccountVm);
         }
@@ -41,7 +37,7 @@ namespace HomeBudget2.Controllers
             }
 
             var bankaccountVm = new BankAccountViewModel();
-            bankaccountVm.BankAccount = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id == id).FirstOrDefault();
+            bankaccountVm.BankAccount = _unitOfWork.BankAccountRepo.GetWhere(bankAccount => bankAccount.Id == id).FirstOrDefault();
             if (bankaccountVm.BankAccount == null)
             {
                 return HttpNotFound();
@@ -53,7 +49,7 @@ namespace HomeBudget2.Controllers
         public ActionResult Create()
         {
             var bankaccountVm = new BankAccountViewModel();
-            // bankaccountVm.BankAccountsList = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id > 0);
+            // bankaccountVm.BankAccountsList = _unitOfWork.BankAccountRepo.GetWhere(bankAccount => bankAccount.Id > 0);
 
             return View(bankaccountVm);
         }
@@ -70,7 +66,8 @@ namespace HomeBudget2.Controllers
                 var userId = User.Identity.GetUserId();
                 bankAccountVm.BankAccount.Balance = bankAccountVm.BankAccount.InitialBalance;
                 bankAccountVm.BankAccount.UserId = userId;
-                _bankAccountRepository.Create(bankAccountVm.BankAccount);
+                _unitOfWork.BankAccountRepo.Create(bankAccountVm.BankAccount);
+                _unitOfWork.Complete();
                 return RedirectToAction("Index");
             }
 
@@ -85,7 +82,7 @@ namespace HomeBudget2.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var bankaccountVm = new BankAccountViewModel();
-            bankaccountVm.BankAccount = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id == id).FirstOrDefault();
+            bankaccountVm.BankAccount = _unitOfWork.BankAccountRepo.GetWhere(bankAccount => bankAccount.Id == id).FirstOrDefault();
             if (bankaccountVm.BankAccount == null)
             {
                 return HttpNotFound();
@@ -104,8 +101,9 @@ namespace HomeBudget2.Controllers
             {
                 var userId = User.Identity.GetUserId();
                 bankAccountVm.BankAccount.UserId = userId;
-                _bankAccountLogic.CalculateBalanceOfSelectedAccount(bankAccountVm.BankAccount);
-                _bankAccountRepository.Update(bankAccountVm.BankAccount);
+                _unitOfWork.BankAccountLogic.CalculateBalanceOfSelectedAccount(bankAccountVm.BankAccount);
+                _unitOfWork.BankAccountRepo.Update(bankAccountVm.BankAccount);
+                _unitOfWork.Complete();
                 return RedirectToAction("Index");
             }
             return View(bankAccountVm);
@@ -121,7 +119,7 @@ namespace HomeBudget2.Controllers
 
             var bankaccountVm = new BankAccountViewModel();
 
-            bankaccountVm.BankAccount = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id == id).FirstOrDefault();
+            bankaccountVm.BankAccount = _unitOfWork.BankAccountRepo.GetWhere(bankAccount => bankAccount.Id == id).FirstOrDefault();
             if (bankaccountVm.BankAccount == null)
             {
                 return HttpNotFound();
@@ -136,9 +134,10 @@ namespace HomeBudget2.Controllers
         {
             var bankaccountVm = new BankAccountViewModel();
 
-            bankaccountVm.BankAccount = _bankAccountRepository.GetWhere(bankAccount => bankAccount.Id == id).FirstOrDefault();
+            bankaccountVm.BankAccount = _unitOfWork.BankAccountRepo.GetWhere(bankAccount => bankAccount.Id == id).FirstOrDefault();
 
-            _bankAccountRepository.Delete(bankaccountVm.BankAccount);
+            _unitOfWork.BankAccountRepo.Delete(bankaccountVm.BankAccount);
+            _unitOfWork.Complete();
             return RedirectToAction("Index");
         }
 

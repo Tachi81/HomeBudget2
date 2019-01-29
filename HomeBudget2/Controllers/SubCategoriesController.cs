@@ -8,21 +8,19 @@ namespace HomeBudget2.Controllers
 {
     [Authorize]
     public class SubCategoriesController : Controller
-    {
-        private readonly ISubCategoryRepository _subCategoryRepository;
-        private readonly ISubcategoryService _subcategoryService;
+    {       
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SubCategoriesController(ISubCategoryRepository subCategoryRepository, ISubcategoryService subcategoryService)
+        public SubCategoriesController(IUnitOfWork unitOfWork)
         {
-            _subCategoryRepository = subCategoryRepository;
-            _subcategoryService = subcategoryService;
+            _unitOfWork = unitOfWork;
         }
 
         // GET: Expense SubCategories Index
         public ActionResult ExpenseSubCategoryIndex()
         {
             bool isSubCategoryAnExpenseSubCat = true;
-            SubCategoryViewModel subCategoryVm = _subcategoryService.CreateSubCatVmWithListOfSubCat(isSubCategoryAnExpenseSubCat, User.Identity.GetUserId());
+            SubCategoryViewModel subCategoryVm = _unitOfWork.SubcategoryService.CreateSubCatVmWithListOfSubCat(isSubCategoryAnExpenseSubCat, User.Identity.GetUserId());
             return View("Index", subCategoryVm);
 
         }
@@ -31,7 +29,7 @@ namespace HomeBudget2.Controllers
         public ActionResult IncomeSubCategoryIndex()
         {
             bool isSubCategoryAnExpenseSubCat = false;
-            var subCategoryVm = _subcategoryService.CreateSubCatVmWithListOfSubCat(isSubCategoryAnExpenseSubCat, User.Identity.GetUserId());
+            var subCategoryVm = _unitOfWork.SubcategoryService.CreateSubCatVmWithListOfSubCat(isSubCategoryAnExpenseSubCat, User.Identity.GetUserId());
             return View("Index", subCategoryVm);
 
         }
@@ -44,7 +42,7 @@ namespace HomeBudget2.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            SubCategoryViewModel subCategoryVm = _subcategoryService.CreateSubCategoryViewModelWithSpecificId(id);
+            SubCategoryViewModel subCategoryVm = _unitOfWork.SubcategoryService.CreateSubCategoryViewModelWithSpecificId(id);
 
             if (subCategoryVm.SubCategory == null)
             {
@@ -59,7 +57,7 @@ namespace HomeBudget2.Controllers
         public ActionResult CreateExpenseSubCategory()
         {
             bool isExpense = true;
-            SubCategoryViewModel subCategoryVm = _subcategoryService.CreateSubCatVmWithSubCatAndWithSelectList(isExpense, User.Identity.GetUserId());
+            SubCategoryViewModel subCategoryVm = _unitOfWork.SubcategoryService.CreateSubCatVmWithSubCatAndWithSelectList(isExpense, User.Identity.GetUserId());
             return View("Create", subCategoryVm);
         }
 
@@ -67,7 +65,7 @@ namespace HomeBudget2.Controllers
         public ActionResult CreateIncomeSubCategory()
         {
             bool isExpense = false;
-            SubCategoryViewModel subCategoryVm = _subcategoryService.CreateSubCatVmWithSubCatAndWithSelectList(isExpense, User.Identity.GetUserId());
+            SubCategoryViewModel subCategoryVm = _unitOfWork.SubcategoryService.CreateSubCatVmWithSubCatAndWithSelectList(isExpense, User.Identity.GetUserId());
             return View("Create", subCategoryVm);
         }
 
@@ -82,7 +80,8 @@ namespace HomeBudget2.Controllers
             {
                 var userId = User.Identity.GetUserId();
                 subCategoryVm.SubCategory.UserId = userId;
-                _subCategoryRepository.Create(subCategoryVm.SubCategory);
+                _unitOfWork.SubCategoryRepo.Create(subCategoryVm.SubCategory);
+                _unitOfWork.Complete();
                 if (subCategoryVm.SubCategory.IsExpense)
                 {
                     return RedirectToAction("ExpenseSubCategoryIndex", "SubCategories");
@@ -90,7 +89,7 @@ namespace HomeBudget2.Controllers
                 return RedirectToAction("IncomeSubCategoryIndex", "SubCategories");
             }
 
-            _subcategoryService.AddSelectListOfCategoriesToSubCategoryVm(subCategoryVm, User.Identity.GetUserId());
+            _unitOfWork.SubcategoryService.AddSelectListOfCategoriesToSubCategoryVm(subCategoryVm, User.Identity.GetUserId());
             return View(subCategoryVm);
         }
 
@@ -103,12 +102,12 @@ namespace HomeBudget2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SubCategoryViewModel subCategoryVm = _subcategoryService.CreateSubCategoryViewModelWithSpecificId(id);
+            SubCategoryViewModel subCategoryVm = _unitOfWork.SubcategoryService.CreateSubCategoryViewModelWithSpecificId(id);
             if (subCategoryVm.SubCategory == null)
             {
                 return HttpNotFound();
             }
-            _subcategoryService.AddSelectListOfCategoriesToSubCategoryVm(subCategoryVm, User.Identity.GetUserId());
+            _unitOfWork.SubcategoryService.AddSelectListOfCategoriesToSubCategoryVm(subCategoryVm, User.Identity.GetUserId());
 
             return View(subCategoryVm);
         }
@@ -124,7 +123,8 @@ namespace HomeBudget2.Controllers
             {
                 var userId = User.Identity.GetUserId();
                 subCategoryVm.SubCategory.UserId = userId;
-                _subCategoryRepository.Update(subCategoryVm.SubCategory);
+                _unitOfWork.SubCategoryRepo.Update(subCategoryVm.SubCategory);
+                _unitOfWork.Complete();
                 if (subCategoryVm.SubCategory.IsExpense)
                 {
                     return RedirectToAction("ExpenseSubCategoryIndex", "SubCategories");
@@ -132,7 +132,7 @@ namespace HomeBudget2.Controllers
                 return RedirectToAction("IncomeSubCategoryIndex", "SubCategories");
             }
 
-            _subcategoryService.AddSelectListOfCategoriesToSubCategoryVm(subCategoryVm, User.Identity.GetUserId());
+            _unitOfWork.SubcategoryService.AddSelectListOfCategoriesToSubCategoryVm(subCategoryVm, User.Identity.GetUserId());
 
             return View(subCategoryVm);
         }
@@ -144,7 +144,7 @@ namespace HomeBudget2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SubCategoryViewModel subCategoryVm = _subcategoryService.CreateSubCategoryViewModelWithSpecificId(id);
+            SubCategoryViewModel subCategoryVm = _unitOfWork.SubcategoryService.CreateSubCategoryViewModelWithSpecificId(id);
             if (subCategoryVm.SubCategory == null)
             {
                 return HttpNotFound();
@@ -157,10 +157,11 @@ namespace HomeBudget2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            SubCategoryViewModel subCategoryVm = _subcategoryService.CreateSubCategoryViewModelWithSpecificId(id);
-            if (_subcategoryService.CanBeDeleted(id))
+            SubCategoryViewModel subCategoryVm = _unitOfWork.SubcategoryService.CreateSubCategoryViewModelWithSpecificId(id);
+            if (_unitOfWork.SubcategoryService.CanBeDeleted(id))
             {
-                _subCategoryRepository.Delete(subCategoryVm.SubCategory);
+                _unitOfWork.SubCategoryRepo.Delete(subCategoryVm.SubCategory);
+                _unitOfWork.Complete();
             }
             else
             {
