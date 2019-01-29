@@ -7,21 +7,19 @@ using System.Web.Mvc;
 namespace HomeBudget2.Service
 {
     public class SubcategoryService : ISubcategoryService
-    {
-        private readonly ISubCategoryRepository _subCategoryRepository;
-        private readonly ICategoryRepository _categoryRepository;
+    {        
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SubcategoryService(ISubCategoryRepository subCategoryRepository, ICategoryRepository categoryRepository)
+        public SubcategoryService(IUnitOfWork unitOfWork)
         {
-            _subCategoryRepository = subCategoryRepository;
-            _categoryRepository = categoryRepository;
+            _unitOfWork = unitOfWork;
         }
 
 
         public SubCategoryViewModel CreateSubCategoryViewModelWithSpecificId(int? id)
         {
             SubCategoryViewModel subCategoryVm = new SubCategoryViewModel();
-            subCategoryVm.SubCategory = _subCategoryRepository
+            subCategoryVm.SubCategory = _unitOfWork.SubCategoryRepo
                 .GetWhereWithIncludes(subCategory => subCategory.Id == id, subCategory => subCategory.Category)
                 .FirstOrDefault();
             return subCategoryVm;
@@ -31,7 +29,7 @@ namespace HomeBudget2.Service
         {
             SubCategoryViewModel subCategoryVm = new SubCategoryViewModel();
             subCategoryVm.ListOfSubCategories =
-                _subCategoryRepository
+                _unitOfWork.SubCategoryRepo
                     .GetWhereWithIncludes(
                         subCat => subCat.Id > 0 && subCat.UserId == userId && subCat.IsExpense == isSubCategoryAnExpenseSubCat,
                         subcat => subcat.Category).OrderBy(sc => sc.Category.CategoryName).ToList();
@@ -65,14 +63,14 @@ namespace HomeBudget2.Service
                 subCategoryVm.SubCategory.IsIncome = true;
             }
 
-            var categories = _categoryRepository.GetWhere(category => category.Id > 0 && category.UserId == userId && isSubCategoryAnExpenseSubCat ? category.IsExpense : category.IsIncome);
+            var categories = _unitOfWork.CategoryRepo.GetWhere(category => category.Id > 0 && category.UserId == userId && isSubCategoryAnExpenseSubCat ? category.IsExpense : category.IsIncome);
             subCategoryVm.SelectListOfCategories = new SelectList(categories, "Id", "CategoryName");
             return subCategoryVm;
         }
 
         public void AddSelectListOfCategoriesToSubCategoryVm(SubCategoryViewModel subCategoryVm, string userId)
         {
-            var categories = _categoryRepository.GetWhere(category => category.Id > 0
+            var categories = _unitOfWork.CategoryRepo.GetWhere(category => category.Id > 0
                                                                       && category.UserId == userId
                                                                       && subCategoryVm.SubCategory.IsExpense ? category.IsExpense : category.IsIncome);
             subCategoryVm.SelectListOfCategories = new SelectList(categories, "Id", "CategoryName");

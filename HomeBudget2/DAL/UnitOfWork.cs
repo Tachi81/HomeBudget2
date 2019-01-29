@@ -2,6 +2,7 @@
 using HomeBudget2.DAL.Interfaces;
 using HomeBudget2.DAL.Repositories;
 using HomeBudget2.Models;
+using HomeBudget2.Service;
 
 namespace HomeBudget2.DAL
 {
@@ -14,7 +15,7 @@ namespace HomeBudget2.DAL
         public ISubCategoryRepository SubCategoryRepo { get ; set ; }
         public IBankAccountLogic BankAccountLogic { get; set; }
         public IFinancialOperationService FinancialOperationService { get; set; }
-        public ISubcategoryService subcategoryService { get; set; }
+        public ISubcategoryService SubcategoryService { get; set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -23,7 +24,8 @@ namespace HomeBudget2.DAL
             FinancialOperatiosRepo = new FinancialOperationRepository(context);
             SubCategoryRepo = new SubCategoryRepository(context);
             BankAccountLogic = new BankAccountLogic(this);
-
+            FinancialOperationService = new FinancialOperationService(this);
+            SubcategoryService = new SubcategoryService(this);
         }
         public void Complete()
         {

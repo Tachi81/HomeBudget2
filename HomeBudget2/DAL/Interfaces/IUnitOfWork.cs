@@ -8,7 +8,7 @@
         ISubCategoryRepository SubCategoryRepo { get; set; }
         IBankAccountLogic BankAccountLogic { get; set; }
         IFinancialOperationService FinancialOperationService { get; set; }
-        ISubcategoryService subcategoryService { get; set; }
+        ISubcategoryService SubcategoryService { get; set; }
 
         void Complete();
 
