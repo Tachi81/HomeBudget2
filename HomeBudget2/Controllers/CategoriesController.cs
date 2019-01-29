@@ -10,18 +10,18 @@ namespace HomeBudget2.Controllers
     public class CategoriesController : Controller
     {
 
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CategoriesController(ICategoryRepository categoryRepository)
+        public CategoriesController(IUnitOfWork unitOfWork)
         {
-            _categoryRepository = categoryRepository;
+            _unitOfWork = unitOfWork;
         }
 
 
         // GET: ExpenseCategories Index
         public ActionResult ExpenseCategoryIndex()
         {
-            var categories = _categoryRepository.GetWhere(cat => cat.Id > 0 && cat.IsExpense);
+            var categories = _unitOfWork.CategoryRepo.GetWhere(cat => cat.Id > 0 && cat.IsExpense);
             if (categories.Count == 0)
             {
                 Category category = new Category();
@@ -34,7 +34,7 @@ namespace HomeBudget2.Controllers
         // GET: IncomeCategories Index
         public ActionResult IncomeCategoryIndex()
         {
-            var categories = _categoryRepository.GetWhere(cat => cat.Id > 0 && cat.IsIncome);
+            var categories = _unitOfWork.CategoryRepo.GetWhere(cat => cat.Id > 0 && cat.IsIncome);
             if (categories.Count == 0)
             {
                 Category category = new Category();
@@ -52,7 +52,7 @@ namespace HomeBudget2.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Category category = _categoryRepository.GetWhere(cat => cat.Id == id).FirstOrDefault();
+            Category category = _unitOfWork.CategoryRepo.GetWhere(cat => cat.Id == id).FirstOrDefault();
             if (category == null)
             {
                 return HttpNotFound();
@@ -85,7 +85,7 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
-                _categoryRepository.Create(category);
+                _unitOfWork.CategoryRepo.Create(category);
                 if (category.IsExpense)
                 {
                     return RedirectToAction("ExpenseCategoryIndex", "Categories");
@@ -103,7 +103,7 @@ namespace HomeBudget2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = _categoryRepository.GetWhere(cat => cat.Id == id).FirstOrDefault();
+            Category category = _unitOfWork.CategoryRepo.GetWhere(cat => cat.Id == id).FirstOrDefault();
             if (category == null)
             {
                 return HttpNotFound();
@@ -120,7 +120,8 @@ namespace HomeBudget2.Controllers
         {
             if (ModelState.IsValid)
             {
-                _categoryRepository.Update(category);
+                _unitOfWork.CategoryRepo.Update(category);
+                _unitOfWork.Complete();
                 if (category.IsExpense)
                 {
                     return RedirectToAction("ExpenseCategoryIndex", "Categories");
@@ -137,7 +138,7 @@ namespace HomeBudget2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = _categoryRepository.GetWhere(cat => cat.Id == id).FirstOrDefault();
+            Category category = _unitOfWork.CategoryRepo.GetWhere(cat => cat.Id == id).FirstOrDefault();
             if (category == null)
             {
                 return HttpNotFound();
@@ -150,8 +151,9 @@ namespace HomeBudget2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Category category = _categoryRepository.GetWhere(cat => cat.Id == id).FirstOrDefault();
-            _categoryRepository.Delete(category);
+            Category category = _unitOfWork.CategoryRepo.GetWhere(cat => cat.Id == id).FirstOrDefault();
+            _unitOfWork.CategoryRepo.Delete(category);
+            _unitOfWork.Complete();
             return RedirectToAction("ExpenseCategoryIndex");
         }
 

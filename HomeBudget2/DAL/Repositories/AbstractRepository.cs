@@ -14,8 +14,7 @@ namespace HomeBudget2.DAL.Repositories
         {
             using (var context = new ApplicationDbContext())
             {
-                context.Set<T>().Add(entity);
-                context.SaveChanges();
+                context.Set<T>().Add(entity);               
             }
         }
 
@@ -24,8 +23,7 @@ namespace HomeBudget2.DAL.Repositories
             using (var context = new ApplicationDbContext())
             {
 
-                context.Entry(entity).State = EntityState.Deleted;
-                context.SaveChanges();
+                context.Entry(entity).State = EntityState.Deleted;               
             }
         }
 
@@ -54,9 +52,7 @@ namespace HomeBudget2.DAL.Repositories
         {
             using (var context = new ApplicationDbContext())
             {
-
-                context.Entry(entity).State = EntityState.Modified;
-                context.SaveChanges();
+                context.Entry(entity).State = EntityState.Modified;               
             }
         }
     }

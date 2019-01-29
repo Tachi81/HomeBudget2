@@ -222,6 +222,7 @@
     <Compile Include="Controllers\FinancialOperationsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SubCategoriesController.cs" />
+    <Compile Include="DAL\Interfaces\IUnitOfWork.cs" />
     <Compile Include="DAL\Repositories\AbstractRepository.cs" />
     <Compile Include="DAL\Interfaces\IAbstractRepository.cs" />
     <Compile Include="DAL\Repositories\BankAccountRepository.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="DAL\Repositories\FinancialOperationRepository.cs" />
     <Compile Include="DAL\Interfaces\IFinancialOperationRepository.cs" />
     <Compile Include="DAL\Repositories\SubCategoryRepository.cs" />
+    <Compile Include="DAL\UnitOfWork.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
