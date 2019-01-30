@@ -11,14 +11,14 @@ namespace UnitTestsHomeBudget2
     [TestFixture]
     class BankAccountTests
     {
-        private Mock<IBankAccountRepository> _mockBankAccountRepository;
-        private Mock<IBankAccountLogic> _mockbankAccountLogic;
-
+        private Mock<IUnitOfWork> _mockUnitOfWork;
+       
         private BankAccountsController _controller;
         private BankAccountViewModel _bankAccountVm;
         private BankAccount _bankAccount;
 
         private string _accountName;
+        private string _userId;
         private int _initialBalance;
         private int _id;
 
@@ -26,19 +26,21 @@ namespace UnitTestsHomeBudget2
         [SetUp]
         public void Init()
         {
-            _mockBankAccountRepository = new Mock<IBankAccountRepository>();
-            _mockbankAccountLogic = new Mock<IBankAccountLogic>();
+            _mockUnitOfWork = new Mock<IUnitOfWork>();
+           
             _accountName = "Tomek Account";
             _initialBalance = 1300;
             _id = 2;
+            _userId = "123.456lk";
 
-            _controller = new BankAccountsController(_mockBankAccountRepository.Object, _mockbankAccountLogic.Object);
+            _controller = new BankAccountsController(_mockUnitOfWork.Object);
 
             _bankAccount = new BankAccount
             {
                 Id = _id,
                 Balance = _initialBalance,
-                AccountName = _accountName
+                AccountName = _accountName,
+                UserId = _userId
             };
 
             _bankAccountVm = new BankAccountViewModel();
@@ -48,14 +50,12 @@ namespace UnitTestsHomeBudget2
         [Test]
         public void Should_CreateAccount_WhenDataIsSpecified()
         {
+            _mockUnitOfWork.Object.BankAccountRepo.Create(_bankAccount);
 
-
-
-            _mockBankAccountRepository.Object.Create(_bankAccount);
-
-            var mockAccount = _mockBankAccountRepository.Object.GetWhere(ba => ba.Id == _bankAccount.Id).First();
+            var mockAccount = _mockUnitOfWork.Object.BankAccountRepo.GetWhere(ba => ba.Id == _bankAccount.Id).First();
 
             Assert.That(mockAccount.AccountName, Is.EqualTo(_accountName));
+            Assert.That(mockAccount.Balance, Is.EqualTo(_initialBalance));
         }
 
     }
