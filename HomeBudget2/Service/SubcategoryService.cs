@@ -1,13 +1,14 @@
 ﻿using HomeBudget2.DAL.Interfaces;
 using HomeBudget2.Models;
 using HomeBudget2.ViewModels;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
 namespace HomeBudget2.Service
 {
     public class SubcategoryService : ISubcategoryService
-    {        
+    {
         private readonly IUnitOfWork _unitOfWork;
 
         public SubcategoryService(IUnitOfWork unitOfWork)
@@ -24,7 +25,7 @@ namespace HomeBudget2.Service
                 .FirstOrDefault();
             return subCategoryVm;
         }
-
+        
         public SubCategoryViewModel CreateSubCatVmWithListOfSubCat(bool isSubCategoryAnExpenseSubCat, string userId)
         {
             SubCategoryViewModel subCategoryVm = new SubCategoryViewModel();
@@ -50,7 +51,7 @@ namespace HomeBudget2.Service
             return subCategoryVm;
         }
 
-        public SubCategoryViewModel CreateSubCatVmWithSubCatAndWithSelectList(bool isSubCategoryAnExpenseSubCat, string userId)
+        public SubCategoryViewModel CreateSubCatVmWithSubCatAndWithSelectList(bool isSubCategoryAnExpenseSubCat, string userId, int? categoryId = null)
         {
             SubCategoryViewModel subCategoryVm = new SubCategoryViewModel();
             subCategoryVm.SubCategory = new SubCategory();
@@ -63,7 +64,16 @@ namespace HomeBudget2.Service
                 subCategoryVm.SubCategory.IsIncome = true;
             }
 
-            var categories = _unitOfWork.CategoryRepo.GetWhere(category => category.Id > 0 && category.UserId == userId && isSubCategoryAnExpenseSubCat ? category.IsExpense : category.IsIncome);
+            var categories = new List<Category>();
+            if (categoryId == null)
+            {
+                 categories = _unitOfWork.CategoryRepo.GetWhere(category => category.Id > 0 && category.UserId == userId && category.IsExpense == isSubCategoryAnExpenseSubCat);
+            }
+            else
+            {
+                categories = _unitOfWork.CategoryRepo.GetWhere(category => category.Id == categoryId && category.UserId == userId);
+
+            }
             subCategoryVm.SelectListOfCategories = new SelectList(categories, "Id", "CategoryName");
             return subCategoryVm;
         }
@@ -72,7 +82,7 @@ namespace HomeBudget2.Service
         {
             var categories = _unitOfWork.CategoryRepo.GetWhere(category => category.Id > 0
                                                                       && category.UserId == userId
-                                                                      && subCategoryVm.SubCategory.IsExpense ? category.IsExpense : category.IsIncome);
+                                                                      &&  category.IsExpense == subCategoryVm.SubCategory.IsExpense );
             subCategoryVm.SelectListOfCategories = new SelectList(categories, "Id", "CategoryName");
         }
 

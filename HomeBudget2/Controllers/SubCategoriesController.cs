@@ -69,6 +69,22 @@ namespace HomeBudget2.Controllers
             return View("Create", subCategoryVm);
         }
 
+        // GET: SubCategories/Create/5
+        public ActionResult Create(int? id, bool isExpense)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            SubCategoryViewModel subCategoryVm = _unitOfWork.SubcategoryService.CreateSubCatVmWithSubCatAndWithSelectList(isExpense, User.Identity.GetUserId(), id);
+            if (subCategoryVm.SubCategory == null)
+            {
+                return HttpNotFound();
+            }
+            
+            return View(subCategoryVm);
+        }
+
         // POST: SubCategories/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.

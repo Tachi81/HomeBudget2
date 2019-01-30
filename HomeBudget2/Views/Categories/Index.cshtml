@@ -44,7 +44,8 @@
         {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.CategoryName)
+                @Html.DisplayFor(modelItem => item.CategoryName) &nbsp; &nbsp;
+                @Html.ActionLink("+ Add Subcategory", "Create", "SubCategories", new { id = item.Id, isExpense = item.IsExpense}, null)
             </td>
 
             <td>
