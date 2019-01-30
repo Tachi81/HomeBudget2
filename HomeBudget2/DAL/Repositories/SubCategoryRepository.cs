@@ -6,7 +6,7 @@ namespace HomeBudget2.DAL.Repositories
     public class SubCategoryRepository : AbstractRepository<SubCategory>, ISubCategoryRepository
     {
         private readonly ApplicationDbContext _context;
-        public SubCategoryRepository(ApplicationDbContext context)
+        public SubCategoryRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }

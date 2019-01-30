@@ -6,7 +6,7 @@ namespace HomeBudget2.DAL.Repositories
     public class CategoryRepository : AbstractRepository<Category>, ICategoryRepository
     {
         private readonly ApplicationDbContext _context;
-       public CategoryRepository(ApplicationDbContext context)
+       public CategoryRepository(ApplicationDbContext context) : base (context)
         {
             _context = context;
         }

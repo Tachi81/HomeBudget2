@@ -16,6 +16,7 @@ namespace HomeBudget2.DAL
         public IBankAccountLogic BankAccountLogic { get; set; }
         public IFinancialOperationService FinancialOperationService { get; set; }
         public ISubcategoryService SubcategoryService { get; set; }
+         
 
         public UnitOfWork(ApplicationDbContext context)
         {
