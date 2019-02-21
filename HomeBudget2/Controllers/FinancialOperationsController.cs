@@ -10,11 +10,11 @@ namespace HomeBudget2.Controllers
     [Authorize]
     public class FinancialOperationsController : Controller
     {
-       
+
         private readonly IUnitOfWork _unitOfWork;
 
         public FinancialOperationsController(IUnitOfWork unitOfWork)
-        {          
+        {
             _unitOfWork = unitOfWork;
         }
 
@@ -104,10 +104,10 @@ namespace HomeBudget2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(FinancialOperationViewModel financialOperationVm)
         {
+            var userId = User.Identity.GetUserId();
+            financialOperationVm.FinancialOperation.UserId = financialOperationVm.UserId =userId;
             if (ModelState.IsValid)
             {
-                var userId = User.Identity.GetUserId();
-                financialOperationVm.FinancialOperation.UserId = userId;
 
                 _unitOfWork.FinancialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
 
@@ -162,7 +162,7 @@ namespace HomeBudget2.Controllers
 
                 _unitOfWork.FinancialOperatiosRepo.Update(financialOperationVm.FinancialOperation);
 
-                 _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
+                _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
                 _unitOfWork.Complete();
                 return RedirectToAction(_unitOfWork.FinancialOperationService.ChooseActionToGo(financialOperationVm));
             }
@@ -170,7 +170,7 @@ namespace HomeBudget2.Controllers
             return View(financialOperationVm);
         }
 
-               
+
         // GET: FinancialOperations/Delete/5
         public ActionResult Delete(int? id)
         {

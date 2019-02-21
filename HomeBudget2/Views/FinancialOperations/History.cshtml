@@ -14,7 +14,7 @@
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayName("Account")
+                @Html.DisplayName("From")
             </th>
 
             <th>
@@ -22,7 +22,7 @@
             </th>
 
             <th>
-                @Html.DisplayName(@"From / To")
+                @Html.DisplayName("To")
             </th>
 
             <th>
@@ -41,13 +41,13 @@
                 @if (item.IsIncome || (item.IsTransfer && item.TargetBankAccountId == financialOperation.BankAccountId))
                 {
                     <td>
-                        @Html.DisplayFor(modelItem => item.DestinationOfMoney)
+                        @Html.DisplayFor(modelItem => item.SourceOfMoney)
                     </td>
                 }
                 else
                 {
                     <td>
-                        @Html.DisplayFor(modelItem => item.SourceOfMoney)
+                       
                     </td>
                 }
 
@@ -58,7 +58,7 @@
                 @if (item.IsIncome || (item.IsTransfer && item.TargetBankAccountId == financialOperation.BankAccountId))
                 {
                     <td>
-                        @Html.DisplayFor(modelItem => item.SourceOfMoney)
+                        
                     </td>
                 }
                 else

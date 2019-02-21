@@ -269,6 +269,7 @@
     <Compile Include="DAL\Interfaces\ISubcategoryService.cs" />
     <Compile Include="Service\SubcategoryService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Validation Attributes\NotEqualToZero.cs" />
     <Compile Include="ViewModels\BankAccountViewModel.cs" />
     <Compile Include="ViewModels\FinancialOperationViewModel.cs" />
     <Compile Include="ViewModels\SubCategoryViewModel.cs" />

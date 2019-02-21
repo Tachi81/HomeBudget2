@@ -1,10 +1,12 @@
-﻿using System;
+﻿using HomeBudget2.Validation_Attributes;
+using System;
 
 namespace HomeBudget2.Models
 {
     public class FinancialOperation
     {
         public int Id { get; set; }
+        [NotEqualToZero]
         public double AmountOfMoney { get; set; }
 
         public DateTime DateTime { get; set; }
