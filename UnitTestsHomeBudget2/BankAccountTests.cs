@@ -4,10 +4,12 @@ using HomeBudget2.Models;
 using HomeBudget2.ViewModels;
 using Moq;
 using NUnit.Framework;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace UnitTestsHomeBudget2
 {
+
     [TestFixture]
     class BankAccountTests
     {
@@ -27,6 +29,7 @@ namespace UnitTestsHomeBudget2
         public void Init()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
+           
            
             _accountName = "Tomek Account";
             _initialBalance = 1300;
@@ -56,6 +59,15 @@ namespace UnitTestsHomeBudget2
 
             Assert.That(mockAccount.AccountName, Is.EqualTo(_accountName));
             Assert.That(mockAccount.Balance, Is.EqualTo(_initialBalance));
+        }
+
+        public static IUnitOfWork MockUnitOfWork(List<BankAccount> bankAccounts)
+        {
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+
+           // todo: fix it --> mockUnitOfWork.Setup(x => x.BankAccountRepo.Students()).Returns(bankAccounts.AsQueryable());
+
+            return mockUnitOfWork.Object;
         }
 
     }
