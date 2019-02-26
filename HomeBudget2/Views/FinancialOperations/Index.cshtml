@@ -1,5 +1,25 @@
 ﻿@using HomeBudget2.Models
 @model HomeBudget2.ViewModels.FinancialOperationViewModel
+@using System.Web.UI.WebControls
+
+
+<h2>TreeView</h2>
+<link href="~/Content/jsTree/themes/default/style.min.css" rel="stylesheet" />
+<div class="form-body">
+    <div id="jstree">
+        @(Html.TreeView(Model.ListOfCategories)
+                                          .EmptyContent("root")
+                                          .Children(m => m.Subcategories)
+                                          .HtmlAttributes(new { id = "tree" })
+                                      .ChildrenHtmlAttributes(new { @class = "subItem" })
+                                          .ItemText(m => m.CategoryName)
+                                          .ItemTemplate(
+                        @<text>
+                            <a href="@item.CategoryName" desc="@item.CategoryName">@item.CategoryName</a>
+                        </text>)
+        )
+    </div>
+</div>
 
 @{
     FinancialOperation financialOperation = Model.FinancialOperation;
@@ -195,7 +215,7 @@
                     @Html.DisplayFor(modelItem => item.AmountOfMoney)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SubCategory.Category.CategoryName)
+                    @Html.DisplayFor(modelItem => item.SubCategory.ParentCategory.CategoryName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.SourceOfMoney)
@@ -212,7 +232,7 @@
                 if (item.IsExpense)
                 {
                     <td>
-                        @Html.DisplayFor(modelItem => item.SubCategory.Category.CategoryName)
+                        @Html.DisplayFor(modelItem => item.SubCategory.ParentCategory.CategoryName)
                     </td>
                 }
 
@@ -237,3 +257,36 @@
     }
 
 </table>
+
+@section scripts
+{
+    <script src="~/Scripts/jsTree3/jstree.min.js"></script>
+    <script>
+
+        $(function () {
+            var selectedData;
+            $('#jstree').jstree({
+                "core": {
+                    "multiple": true,
+                    "check_callback": false,
+                    'themes': {
+                        "responsive": true,
+                        'variant': 'larg',
+                        'stripes': false,
+                        'dots': false
+                    }
+                },
+                "types": {
+                    "default": {
+                        "icon": "fa fa-folder icon-state-warning icon-lg"
+                    },
+                    "file": {
+                        "icon": "fa fa-file icon-state-warning icon-lg"
+                    }
+                },
+                "plugins": ["dnd", "state", "types", "sort", "checkbox"]
+            });
+        });
+    </script>
+}
+

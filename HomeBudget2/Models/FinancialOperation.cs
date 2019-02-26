@@ -24,7 +24,7 @@ namespace HomeBudget2.Models
         public virtual BankAccount BankAccount { get; set; }
         public virtual BankAccount TargetBankAccount { get; set; }
 
-        public virtual SubCategory SubCategory { get; set; }
+        public virtual Category SubCategory { get; set; }
 
         public string UserId { get; set; }
 

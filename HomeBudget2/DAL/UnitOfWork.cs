@@ -12,7 +12,7 @@ namespace HomeBudget2.DAL
         public IBankAccountRepository BankAccountRepo { get ; set ; }
         public ICategoryRepository CategoryRepo { get ; set ; }
         public IFinancialOperationRepository FinancialOperatiosRepo { get ; set ; }
-        public ISubCategoryRepository SubCategoryRepo { get ; set ; }
+       
         public IBankAccountLogic BankAccountLogic { get; set; }
         public IFinancialOperationService FinancialOperationService { get; set; }
         public ISubcategoryService SubcategoryService { get; set; }
@@ -24,7 +24,7 @@ namespace HomeBudget2.DAL
             BankAccountRepo = new BankAccountRepository(context);
             CategoryRepo = new CategoryRepository(context);
             FinancialOperatiosRepo = new FinancialOperationRepository(context);
-            SubCategoryRepo = new SubCategoryRepository(context);
+           
             BankAccountLogic = new BankAccountLogic(this);
             FinancialOperationService = new FinancialOperationService(this);
             SubcategoryService = new SubcategoryService(this);

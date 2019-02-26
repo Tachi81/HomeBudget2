@@ -15,5 +15,7 @@ namespace HomeBudget2.ViewModels
         public IEnumerable<SelectListItem> SelectListOfBankAccounts { get; set; }
         public IEnumerable<SelectListItem> SelectListOfCategories { get; set; }
         public IEnumerable<SelectListItem> SelectListOfSubCategories { get; set; }
+
+        public IEnumerable<Category> ListOfCategories { get; set; }
     }
 }

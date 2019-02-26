@@ -87,7 +87,7 @@ namespace HomeBudget2.Controllers
             }
             FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
             financialOperationVm.FinancialOperation =
-                _unitOfWork.FinancialOperatiosRepo.GetWhereWithIncludes(fo => fo.Id == id, fo => fo.SubCategory, fo => fo.SubCategory.Category).FirstOrDefault();
+                _unitOfWork.FinancialOperatiosRepo.GetWhereWithIncludes(fo => fo.Id == id, fo => fo.SubCategory, fo => fo.SubCategory.ParentCategory).FirstOrDefault();
 
             if (financialOperationVm.FinancialOperation == null)
             {

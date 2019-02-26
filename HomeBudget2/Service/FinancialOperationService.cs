@@ -26,7 +26,7 @@ namespace HomeBudget2.Service
                                                                          && fo.IsExpense == isExpense
                                                                          && fo.IsIncome == isIncome
                                                                          && fo.IsTransfer == (!isExpense && !isIncome)
-                    , fo => fo.SubCategory, fo => fo.SubCategory.Category)
+                    , fo => fo.SubCategory, fo => fo.SubCategory.ParentCategory)
                     .OrderByDescending(fo => fo.DateTime)
                     .ToList();
             financialOperationVm.FinancialOperation = new FinancialOperation()
@@ -45,10 +45,17 @@ namespace HomeBudget2.Service
         public void AddSelectListsToViewModel(FinancialOperationViewModel financialOperationVm, bool isExpense)
         {
             var bankaccounts = _unitOfWork.BankAccountRepo.GetWhere(ba => ba.Id > 0 && ba.UserId == financialOperationVm.UserId);
-            var subcategories = _unitOfWork.SubCategoryRepo.
+            var subcategories = _unitOfWork.CategoryRepo.
+                GetWhere(sc => sc.Id > 0 
+                && sc.UserId == financialOperationVm.UserId 
+                && sc.IsExpense == isExpense 
+                && sc.IsIncome == !isExpense 
+                &&sc.ParentCategoryId != null);
+            var categories = _unitOfWork.CategoryRepo.
                 GetWhere(sc => sc.Id > 0 && sc.UserId == financialOperationVm.UserId && sc.IsExpense == isExpense && sc.IsIncome == !isExpense);
             financialOperationVm.SelectListOfBankAccounts = new SelectList(bankaccounts, "Id", "AccountName");
             financialOperationVm.SelectListOfSubCategories = new SelectList(subcategories, "Id", "SubCategoryName");
+            financialOperationVm.ListOfCategories = categories;
         }
 
 
@@ -96,7 +103,7 @@ namespace HomeBudget2.Service
             var bankAccount = _unitOfWork.BankAccountRepo
                 .GetWhere(ba => ba.Id == financialOperationVm.FinancialOperation.BankAccountId).FirstOrDefault();
 
-            var subCategory = _unitOfWork.SubCategoryRepo
+            var subCategory = _unitOfWork.CategoryRepo
                 .GetWhere(sc => sc.Id == financialOperationVm.FinancialOperation.SubCategoryId).FirstOrDefault();
 
             var targetAccount = _unitOfWork.BankAccountRepo
@@ -107,12 +114,12 @@ namespace HomeBudget2.Service
                 financialOperationVm.FinancialOperation.SourceOfMoney = bankAccount.AccountName;
 
                 financialOperationVm.FinancialOperation.DestinationOfMoney =
-                   subCategory.SubCategoryName;
+                   subCategory.CategoryName;
             }
             if (financialOperationVm.FinancialOperation.IsIncome)
             {
                 financialOperationVm.FinancialOperation.SourceOfMoney =
-                   subCategory.SubCategoryName;
+                   subCategory.CategoryName;
 
                 financialOperationVm.FinancialOperation.DestinationOfMoney =
                     targetAccount.AccountName;

@@ -20,8 +20,8 @@ namespace HomeBudget2.Service
         public SubCategoryViewModel CreateSubCategoryViewModelWithSpecificId(int? id)
         {
             SubCategoryViewModel subCategoryVm = new SubCategoryViewModel();
-            subCategoryVm.SubCategory = _unitOfWork.SubCategoryRepo
-                .GetWhereWithIncludes(subCategory => subCategory.Id == id, subCategory => subCategory.Category)
+            subCategoryVm.SubCategory = _unitOfWork.CategoryRepo
+                .GetWhereWithIncludes(subCategory => subCategory.Id == id, subCategory => subCategory.ParentCategory)
                 .FirstOrDefault();
             return subCategoryVm;
         }
@@ -30,13 +30,13 @@ namespace HomeBudget2.Service
         {
             SubCategoryViewModel subCategoryVm = new SubCategoryViewModel();
             subCategoryVm.ListOfSubCategories =
-                _unitOfWork.SubCategoryRepo
+                _unitOfWork.CategoryRepo
                     .GetWhereWithIncludes(
                         subCat => subCat.Id > 0 && subCat.UserId == userId && subCat.IsExpense == isSubCategoryAnExpenseSubCat,
-                        subcat => subcat.Category).OrderBy(sc => sc.Category.CategoryName).ToList();
+                        subcat => subcat.ParentCategory).OrderBy(sc => sc.ParentCategory.CategoryName).ToList();
             if (subCategoryVm.ListOfSubCategories.Count == 0)
             {
-                SubCategory subCategory = new SubCategory();
+                Category subCategory = new Category();
                 if (isSubCategoryAnExpenseSubCat)
                 {
                     subCategory.IsExpense = true;
@@ -54,7 +54,7 @@ namespace HomeBudget2.Service
         public SubCategoryViewModel CreateSubCatVmWithSubCatAndWithSelectList(bool isSubCategoryAnExpenseSubCat, string userId, int? categoryId = null)
         {
             SubCategoryViewModel subCategoryVm = new SubCategoryViewModel();
-            subCategoryVm.SubCategory = new SubCategory();
+            subCategoryVm.SubCategory = new Category();
             if (isSubCategoryAnExpenseSubCat)
             {
                 subCategoryVm.SubCategory.IsExpense = true;

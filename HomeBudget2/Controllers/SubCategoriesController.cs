@@ -96,7 +96,7 @@ namespace HomeBudget2.Controllers
             {
                 var userId = User.Identity.GetUserId();
                 subCategoryVm.SubCategory.UserId = userId;
-                _unitOfWork.SubCategoryRepo.Create(subCategoryVm.SubCategory);
+                _unitOfWork.CategoryRepo.Create(subCategoryVm.SubCategory);
                 _unitOfWork.Complete();
                 if (subCategoryVm.SubCategory.IsExpense)
                 {
@@ -139,7 +139,7 @@ namespace HomeBudget2.Controllers
             {
                 var userId = User.Identity.GetUserId();
                 subCategoryVm.SubCategory.UserId = userId;
-                _unitOfWork.SubCategoryRepo.Update(subCategoryVm.SubCategory);
+                _unitOfWork.CategoryRepo.Update(subCategoryVm.SubCategory);
                 _unitOfWork.Complete();
                 if (subCategoryVm.SubCategory.IsExpense)
                 {
@@ -176,7 +176,7 @@ namespace HomeBudget2.Controllers
             SubCategoryViewModel subCategoryVm = _unitOfWork.SubcategoryService.CreateSubCategoryViewModelWithSpecificId(id);
             if (_unitOfWork.SubcategoryService.CanBeDeleted(id))
             {
-                _unitOfWork.SubCategoryRepo.Delete(subCategoryVm.SubCategory);
+                _unitOfWork.CategoryRepo.Delete(subCategoryVm.SubCategory);
                 _unitOfWork.Complete();
             }
             else

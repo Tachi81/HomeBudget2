@@ -12,6 +12,9 @@ namespace HomeBudget2.Models
 
         public string UserId { get; set; }
 
-        public virtual ICollection<SubCategory> Subcategories { get; set; }
+        public int? ParentCategoryId { get; set; }
+
+        public virtual ICollection<Category> Subcategories { get; set; }
+        public virtual Category ParentCategory { get; set; }
     }
 }

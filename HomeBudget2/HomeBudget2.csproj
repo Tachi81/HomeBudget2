@@ -237,12 +237,10 @@
     <Compile Include="DAL\Interfaces\IAbstractRepository.cs" />
     <Compile Include="DAL\Repositories\BankAccountRepository.cs" />
     <Compile Include="DAL\Interfaces\IBankAccountRepository.cs" />
-    <Compile Include="DAL\Interfaces\ISubCategoryRepository.cs" />
     <Compile Include="DAL\Repositories\CategoryRepository.cs" />
     <Compile Include="DAL\Interfaces\ICategoryRepository.cs" />
     <Compile Include="DAL\Repositories\FinancialOperationRepository.cs" />
     <Compile Include="DAL\Interfaces\IFinancialOperationRepository.cs" />
-    <Compile Include="DAL\Repositories\SubCategoryRepository.cs" />
     <Compile Include="DAL\UnitOfWork.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -264,7 +262,6 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\jsTree3Node.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\SubCategory.cs" />
     <Compile Include="Models\TreeViewHelper.cs" />
     <Compile Include="Models\TreeView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -6,8 +6,8 @@ namespace HomeBudget2.ViewModels
 {
     public class SubCategoryViewModel
     {
-        public SubCategory SubCategory { get; set; }
-        public List<SubCategory> ListOfSubCategories { get; set; }
+        public Category SubCategory { get; set; }
+        public List<Category> ListOfSubCategories { get; set; }
 
         public IEnumerable<SelectListItem> SelectListOfCategories { get; set; }
     }

@@ -1,5 +1,5 @@
-﻿using System.Data.Entity;
-using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity;
 
 namespace HomeBudget2.Models
 {
@@ -19,7 +19,7 @@ namespace HomeBudget2.Models
         public DbSet<FinancialOperation> FinancialOperations { get; set; }
 
         public DbSet<Category> Categories { get; set; }
-        public DbSet<SubCategory> SubCategories { get; set; }
+        
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -28,9 +28,7 @@ namespace HomeBudget2.Models
 
             // modelBuilder.Entity<FinancialOperation>().HasOptional(fo=>fo.SourceBankAccountId).WithRequired()
 
-
-
-            modelBuilder.Entity<SubCategory>().Property(SubCat => SubCat.SubCategoryName).IsRequired();
+                                  
 
             modelBuilder.Entity<Category>().Property(Cat => Cat.CategoryName).IsRequired();
 
