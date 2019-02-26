@@ -24,18 +24,18 @@
         @Html.HiddenFor(model => model.SubCategory.IsExpense)
         @Html.HiddenFor(model => model.SubCategory.IsIncome)
         <div class="form-group">
-            @Html.LabelFor(model => model.SubCategory.SubCategoryName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.SubCategory.CategoryName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.SubCategory.SubCategoryName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SubCategory.SubCategoryName, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.SubCategory.CategoryName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SubCategory.CategoryName, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.SubCategory.CategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.SubCategory.ParentCategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.SubCategory.CategoryId, Model.SelectListOfCategories, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.SubCategory.CategoryId, "", new { @class = "text-danger" })
+                @Html.DropDownListFor(model => model.SubCategory.ParentCategoryId, Model.SelectListOfCategories, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SubCategory.ParentCategoryId, "", new { @class = "text-danger" })
             </div>
         </div>
 

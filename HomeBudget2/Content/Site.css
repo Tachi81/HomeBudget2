@@ -28,3 +28,24 @@ textarea {
     max-width:280px;
     color:crimson;
 }
+
+.category-container{ 
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content:flex-start;
+    align-items:stretch;
+}
+
+.category-inside1{
+    flex-grow:2;
+    background-color:aqua;
+}
+
+.category-inside2{
+    flex-grow:2;
+    background-color:cornflowerblue;
+}
+
+.label-category{
+    width:130%;
+}

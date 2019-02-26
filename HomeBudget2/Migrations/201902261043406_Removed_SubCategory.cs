@@ -3,7 +3,7 @@ namespace HomeBudget2.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddedModel : DbMigration
+    public partial class Removed_SubCategory : DbMigration
     {
         public override void Up()
         {
@@ -15,6 +15,7 @@ namespace HomeBudget2.Migrations
                         InitialBalance = c.Double(nullable: false),
                         Balance = c.Double(nullable: false),
                         AccountName = c.String(nullable: false),
+                        UserId = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -31,6 +32,7 @@ namespace HomeBudget2.Migrations
                         TargetBankAccountId = c.Int(),
                         SourceOfMoney = c.String(),
                         DestinationOfMoney = c.String(),
+                        UserId = c.String(),
                         IsTransfer = c.Boolean(nullable: false),
                         IsExpense = c.Boolean(nullable: false),
                         IsIncome = c.Boolean(nullable: false),
@@ -38,27 +40,13 @@ namespace HomeBudget2.Migrations
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.BankAccounts", t => t.BankAccountId)
-                .ForeignKey("dbo.SubCategories", t => t.SubCategoryId)
+                .ForeignKey("dbo.Categories", t => t.SubCategoryId)
                 .ForeignKey("dbo.BankAccounts", t => t.TargetBankAccountId)
                 .ForeignKey("dbo.BankAccounts", t => t.BankAccount_Id)
                 .Index(t => t.BankAccountId)
                 .Index(t => t.SubCategoryId)
                 .Index(t => t.TargetBankAccountId)
                 .Index(t => t.BankAccount_Id);
-            
-            CreateTable(
-                "dbo.SubCategories",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        SubCategoryName = c.String(nullable: false),
-                        CategoryId = c.Int(nullable: false),
-                        IsExpense = c.Boolean(nullable: false),
-                        IsIncome = c.Boolean(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Categories", t => t.CategoryId, cascadeDelete: true)
-                .Index(t => t.CategoryId);
             
             CreateTable(
                 "dbo.Categories",
@@ -68,8 +56,12 @@ namespace HomeBudget2.Migrations
                         CategoryName = c.String(nullable: false),
                         IsExpense = c.Boolean(nullable: false),
                         IsIncome = c.Boolean(nullable: false),
+                        UserId = c.String(),
+                        ParentCategoryId = c.Int(),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Categories", t => t.ParentCategoryId)
+                .Index(t => t.ParentCategoryId);
             
             CreateTable(
                 "dbo.AspNetRoles",
@@ -149,8 +141,8 @@ namespace HomeBudget2.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.FinancialOperations", "BankAccount_Id", "dbo.BankAccounts");
             DropForeignKey("dbo.FinancialOperations", "TargetBankAccountId", "dbo.BankAccounts");
-            DropForeignKey("dbo.FinancialOperations", "SubCategoryId", "dbo.SubCategories");
-            DropForeignKey("dbo.SubCategories", "CategoryId", "dbo.Categories");
+            DropForeignKey("dbo.FinancialOperations", "SubCategoryId", "dbo.Categories");
+            DropForeignKey("dbo.Categories", "ParentCategoryId", "dbo.Categories");
             DropForeignKey("dbo.FinancialOperations", "BankAccountId", "dbo.BankAccounts");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
@@ -158,7 +150,7 @@ namespace HomeBudget2.Migrations
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
-            DropIndex("dbo.SubCategories", new[] { "CategoryId" });
+            DropIndex("dbo.Categories", new[] { "ParentCategoryId" });
             DropIndex("dbo.FinancialOperations", new[] { "BankAccount_Id" });
             DropIndex("dbo.FinancialOperations", new[] { "TargetBankAccountId" });
             DropIndex("dbo.FinancialOperations", new[] { "SubCategoryId" });
@@ -169,7 +161,6 @@ namespace HomeBudget2.Migrations
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.Categories");
-            DropTable("dbo.SubCategories");
             DropTable("dbo.FinancialOperations");
             DropTable("dbo.BankAccounts");
         }

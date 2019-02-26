@@ -54,7 +54,7 @@ namespace HomeBudget2.Service
             var categories = _unitOfWork.CategoryRepo.
                 GetWhere(sc => sc.Id > 0 && sc.UserId == financialOperationVm.UserId && sc.IsExpense == isExpense && sc.IsIncome == !isExpense);
             financialOperationVm.SelectListOfBankAccounts = new SelectList(bankaccounts, "Id", "AccountName");
-            financialOperationVm.SelectListOfSubCategories = new SelectList(subcategories, "Id", "SubCategoryName");
+            financialOperationVm.SelectListOfSubCategories = new SelectList(subcategories, "Id", "CategoryName");
             financialOperationVm.ListOfCategories = categories;
         }
 

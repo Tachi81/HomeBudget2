@@ -2,7 +2,7 @@
 @model HomeBudget2.ViewModels.SubCategoryViewModel
 
 @{
-    SubCategory firstSubCategoryfromTheList = Model.ListOfSubCategories.First();
+    Category firstSubCategoryfromTheList = Model.ListOfSubCategories.First();
 }
 
 @if (firstSubCategoryfromTheList.IsExpense)
@@ -28,15 +28,15 @@
     </p>
 }
 
-@if (firstSubCategoryfromTheList.SubCategoryName != null)
+@if (firstSubCategoryfromTheList.CategoryName != null)
 {
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.SubCategory.Category.CategoryName)
+                @Html.LabelFor(model => model.SubCategory.ParentCategory.CategoryName, "Category")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SubCategory.SubCategoryName)
+                @Html.LabelFor(model => model.SubCategory.CategoryName, "Subcategory")
             </th>
 
             <th></th>
@@ -46,10 +46,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                    @Html.DisplayFor(modelItem => item.ParentCategory.CategoryName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SubCategoryName)
+                    @Html.DisplayFor(modelItem => item.CategoryName)
                 </td>
 
                 <td>

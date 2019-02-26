@@ -7,13 +7,13 @@ namespace HomeBudget2.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddedUser : IMigrationMetadata
+    public sealed partial class Removed_SubCategory : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddedUser));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Removed_SubCategory));
         
         string IMigrationMetadata.Id
         {
-            get { return "201812172045466_AddedUser"; }
+            get { return "201902261043406_Removed_SubCategory"; }
         }
         
         string IMigrationMetadata.Source

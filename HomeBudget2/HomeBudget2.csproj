@@ -245,13 +245,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201812112125098_AddedModel.cs" />
-    <Compile Include="Migrations\201812112125098_AddedModel.Designer.cs">
-      <DependentUpon>201812112125098_AddedModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812172045466_AddedUser.cs" />
-    <Compile Include="Migrations\201812172045466_AddedUser.Designer.cs">
-      <DependentUpon>201812172045466_AddedUser.cs</DependentUpon>
+    <Compile Include="Migrations\201902261043406_Removed_SubCategory.cs" />
+    <Compile Include="Migrations\201902261043406_Removed_SubCategory.Designer.cs">
+      <DependentUpon>201902261043406_Removed_SubCategory.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -432,11 +428,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201812112125098_AddedModel.resx">
-      <DependentUpon>201812112125098_AddedModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812172045466_AddedUser.resx">
-      <DependentUpon>201812172045466_AddedUser.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201902261043406_Removed_SubCategory.resx">
+      <DependentUpon>201902261043406_Removed_SubCategory.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

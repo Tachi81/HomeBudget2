@@ -32,8 +32,13 @@ namespace HomeBudget2.Service
             subCategoryVm.ListOfSubCategories =
                 _unitOfWork.CategoryRepo
                     .GetWhereWithIncludes(
-                        subCat => subCat.Id > 0 && subCat.UserId == userId && subCat.IsExpense == isSubCategoryAnExpenseSubCat,
-                        subcat => subcat.ParentCategory).OrderBy(sc => sc.ParentCategory.CategoryName).ToList();
+                        subCat => subCat.Id > 0 
+                        && subCat.UserId == userId 
+                        && subCat.IsExpense == isSubCategoryAnExpenseSubCat
+                        && subCat.ParentCategory != null
+                        ,subcat => subcat.ParentCategory)
+                        .OrderBy(sc => sc.ParentCategory.CategoryName)
+                        .ToList();
             if (subCategoryVm.ListOfSubCategories.Count == 0)
             {
                 Category subCategory = new Category();
