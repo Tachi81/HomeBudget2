@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.WebPages;
 
-namespace TreeViewMVC.Models
+namespace HomeBudget2.Models
 {
     /// <summary>  
     /// Create an HTML tree from a resursive collection of items  

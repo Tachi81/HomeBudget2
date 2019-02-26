@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 
-namespace TreeViewMVC.Models
+namespace HomeBudget2.Models
 {
     public static class TreeViewHelper
     {
