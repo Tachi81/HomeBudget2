@@ -10,6 +10,7 @@ namespace HomeBudget2.ViewModels
         public List<FinancialOperation> ListOfFinancialOperations { get; set; }
 
         public string UserId { get; set; }
+        public string ErrorMessage { get; set; }
 
         public IEnumerable<SelectListItem> SelectListOfBankAccounts { get; set; }
         public IEnumerable<SelectListItem> SelectListOfCategories { get; set; }

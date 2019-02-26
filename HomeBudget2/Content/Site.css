@@ -22,3 +22,9 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.warning-note { 
+    margin-left:14em;
+    max-width:280px;
+    color:crimson;
+}

@@ -105,20 +105,28 @@ namespace HomeBudget2.Controllers
         public ActionResult Create(FinancialOperationViewModel financialOperationVm)
         {
             var userId = User.Identity.GetUserId();
-            financialOperationVm.FinancialOperation.UserId = financialOperationVm.UserId =userId;
+
+            financialOperationVm.FinancialOperation.UserId = financialOperationVm.UserId = userId;
+
             if (ModelState.IsValid)
             {
 
                 _unitOfWork.FinancialOperationService.SetSourceOfMoneyAndDestinationOfMoney(financialOperationVm);
 
-                _unitOfWork.FinancialOperatiosRepo.Create(financialOperationVm.FinancialOperation);
+                if (financialOperationVm.FinancialOperation.IsTransfer
+                               && financialOperationVm.FinancialOperation.SourceOfMoney == financialOperationVm.FinancialOperation.DestinationOfMoney)
+                {
+                    financialOperationVm.ErrorMessage = "Source account cannot be equal to Target account";
+                }
+                else
+                {
+                    _unitOfWork.FinancialOperatiosRepo.Create(financialOperationVm.FinancialOperation);
 
-                _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
-                _unitOfWork.Complete();
-
-                return RedirectToAction(_unitOfWork.FinancialOperationService.ChooseActionToGo(financialOperationVm));
+                    _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
+                    _unitOfWork.Complete();
+                    return RedirectToAction(_unitOfWork.FinancialOperationService.ChooseActionToGo(financialOperationVm));
+                }
             }
-
             _unitOfWork.FinancialOperationService.AddSelectListsToViewModel(financialOperationVm, financialOperationVm.FinancialOperation.IsExpense);
 
             return View(financialOperationVm);
