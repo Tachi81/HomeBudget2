@@ -52,7 +52,7 @@ namespace HomeBudget2.Service
                 && sc.IsIncome == !isExpense 
                 &&sc.ParentCategoryId != null);
             var categories = _unitOfWork.CategoryRepo.
-                GetWhere(sc => sc.Id > 0 && sc.UserId == financialOperationVm.UserId && sc.IsExpense == isExpense && sc.IsIncome == !isExpense);
+                GetWhere(sc => sc.Id > 0 && sc.UserId == financialOperationVm.UserId && sc.IsExpense == isExpense && sc.IsIncome == !isExpense && sc.ParentCategory == null);
             financialOperationVm.SelectListOfBankAccounts = new SelectList(bankaccounts, "Id", "AccountName");
             financialOperationVm.SelectListOfSubCategories = new SelectList(subcategories, "Id", "CategoryName");
             financialOperationVm.ListOfCategories = categories;

@@ -42,20 +42,28 @@
 
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CategoryName) @if (item.ParentCategory == null)
-                {
-                    @Html.ActionLink("+ Add Subcategory", "Create", "SubCategories", new { id = item.Id, isExpense = item.IsExpense }, null);
-                }
-            </td>
+            if (item.ParentCategory == null)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategoryName) &nbsp; &nbsp; 
+                        <button> @Html.ActionLink("+ Add Subcategory"
+                                , "Create"
+                                , "SubCategories"
+                                , new { id = item.Id, isExpense = item.IsExpense }
+                                , null)
+                        </button>
+                       
+                    </td>
 
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-        </tr>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+
         }
 
     </table>
