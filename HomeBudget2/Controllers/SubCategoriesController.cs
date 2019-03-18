@@ -100,9 +100,9 @@ namespace HomeBudget2.Controllers
                 _unitOfWork.Complete();
                 if (subCategoryVm.SubCategory.IsExpense)
                 {
-                    return RedirectToAction("ExpenseSubCategoryIndex", "SubCategories");
+                    return RedirectToAction("ExpensesIndex", "FinancialOperations");
                 }
-                return RedirectToAction("IncomeSubCategoryIndex", "SubCategories");
+                return RedirectToAction("IncomesIndex", "FinancialOperations");
             }
 
             _unitOfWork.SubcategoryService.AddSelectListOfCategoriesToSubCategoryVm(subCategoryVm, User.Identity.GetUserId());

@@ -36,14 +36,26 @@ textarea {
     align-items:stretch;
 }
 
-.category-inside1{
-    flex-grow:2;
-    background-color:aqua;
+.category-inside1 {
+    flex-grow: 2;
+    background-color: bisque;
 }
 
-.category-inside2{
-    flex-grow:2;
-    background-color:cornflowerblue;
+.category-inside2 {
+    flex-grow: 2;
+    background-color: #e9dac9;
+    position:relative;
+}
+
+.category-inside2 .buttons{   
+    position: absolute;
+    bottom: 5px;
+    width:100%;
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content:space-around;
+    align-items:stretch;
+
 }
 
 .label-category{

@@ -119,18 +119,28 @@
             <div id="jstree">
 
                 @(Html.TreeView(Model.ListOfCategories)
-                            .EmptyContent(Model.FinancialOperation.IsExpense?"Expense Categories":"Income Categories")
-                            .Children(m => m.Subcategories)
-                            .HtmlAttributes(new { id = "tree" })
-                            .ChildrenHtmlAttributes(new { @class = "subItem" })
-                            .ItemText(m => m.CategoryName)
-                            .ItemTemplate(
-                                    @<text>
-                                        <a href="@item.CategoryName" class="category-element" desc="@item.CategoryName" data-category-id = @item.Id > @item.CategoryName</a>
-                                    </text>)
+                                            .EmptyContent(Model.FinancialOperation.IsExpense ? "Expense Categories" : "Income Categories")
+                                            .Children(m => m.Subcategories)
+                                            .HtmlAttributes(new { id = "tree" })
+                                            .ChildrenHtmlAttributes(new { @class = "subItem" })
+                                            .ItemText(m => m.CategoryName)
+                                            .ItemTemplate(
+                                                    @<text>
+                                                        <a href="@item.CategoryName" desc="@item.CategoryName" data-category-id=@item.Id> @item.CategoryName</a>
+                                                        @Html.ActionLink("Edit", "Edit","", new { id = item.Id },null) |                                                        
+                                                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                                                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+
+                                                    </text> )
                 )
             </div>
         </div>
+        <div class="buttons">          
+            <button class="btn btn-default">@Html.ActionLink("Create new Category", Model.FinancialOperation.IsExpense ? "CreateExpenseCategory" : "CreateIncomeCategory", "Categories")</button>
+            <button class="btn btn-default">@Html.ActionLink("Create new Subcategory", Model.FinancialOperation.IsExpense ? "CreateExpenseSubCategory" : "CreateIncomeSubCategory", "Subcategories")</button>
+
+        </div>
+
     </div>
     }
 
@@ -302,7 +312,7 @@
         $(document).ready(function () {
           
             $(".jstree-last").click(function (e) {
-                debugger;
+                //debugger;
                 var link = $(e.target);                
                 
                 var categoryHolder = $(".subcategory-holder");
