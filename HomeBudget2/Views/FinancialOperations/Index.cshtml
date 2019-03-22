@@ -6,19 +6,19 @@
 <link href="~/Content/jsTree/themes/default/style.min.css" rel="stylesheet" />
 
 @{
-    FinancialOperation financialOperation = Model.FinancialOperation;
+    FinancialOperation financialOp = Model.FinancialOperation;
 }
 
-@if (financialOperation.IsExpense)
+@if (financialOp.IsExpense)
 {
     <h2>Expenses</h2>
 }
-@if (financialOperation.IsIncome)
+@if (financialOp.IsIncome)
 {
     <h2>Incomes</h2>
 
 }
-@if (financialOperation.IsTransfer)
+@if (financialOp.IsTransfer)
 {
     <h2>Transfers</h2>
 }
@@ -33,73 +33,73 @@
             <div class="form-horizontal">
 
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                @Html.HiddenFor(model => model.FinancialOperation.IsExpense)
-                @Html.HiddenFor(model => model.FinancialOperation.IsIncome)
-                @Html.HiddenFor(model => model.FinancialOperation.IsTransfer)
+                @Html.HiddenFor(model => financialOp.IsExpense)
+                @Html.HiddenFor(model => financialOp.IsIncome)
+                @Html.HiddenFor(model => financialOp.IsTransfer)
 
                 <div class="form-group  label-category">
-                    @Html.LabelFor(model => model.FinancialOperation.AmountOfMoney, "Amount of Money", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => financialOp.AmountOfMoney, "Amount of Money", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.FinancialOperation.AmountOfMoney, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.FinancialOperation.AmountOfMoney, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => financialOp.AmountOfMoney, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => financialOp.AmountOfMoney, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
-                @if (financialOperation.IsExpense || financialOperation.IsTransfer)
+                @if (financialOp.IsExpense || financialOp.IsTransfer)
                 {
                     <div class="form-group label-category">
-                        @Html.LabelFor(model => model.FinancialOperation.BankAccountId, "From account", htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.LabelFor(model => financialOp.BankAccountId, "From account", htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.DropDownListFor(model => model.FinancialOperation.BankAccountId, Model.SelectListOfBankAccounts, htmlAttributes: new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.FinancialOperation.BankAccountId, "", new { @class = "text-danger" })
+                            @Html.DropDownListFor(model => financialOp.BankAccountId, Model.SelectListOfBankAccounts, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => financialOp.BankAccountId, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 }
 
 
-                @if (financialOperation.IsExpense || financialOperation.IsIncome)
+                @if (financialOp.IsExpense || financialOp.IsIncome)
                 {
                     <div class="form-group label-category">
-                        @if (financialOperation.IsExpense)
+                        @if (financialOp.IsExpense)
                         {
-                            @Html.LabelFor(model => model.FinancialOperation.SubCategoryId, "Expense SubCategory", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => financialOp.SubCategoryId, "Expense SubCategory", htmlAttributes: new { @class = "control-label col-md-2" })
                         }
                         else
                         {
-                            @Html.LabelFor(model => model.FinancialOperation.SubCategoryId, "Income SubCategory", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => financialOp.SubCategoryId, "Income SubCategory", htmlAttributes: new { @class = "control-label col-md-2" })
                         }
 
                         <div class="col-md-10">
-                            @Html.DropDownListFor(model => model.FinancialOperation.SubCategoryId, Model.SelectListOfSubCategories, htmlAttributes: new { @class = "form-control subcategory-holder" })
-                            @Html.ValidationMessageFor(model => model.FinancialOperation.SubCategoryId, "", new { @class = "text-danger" })
+                            @Html.DropDownListFor(model => financialOp.SubCategoryId, Model.SelectListOfSubCategories, htmlAttributes: new { @class = "form-control subcategory-holder" })
+                            @Html.ValidationMessageFor(model => financialOp.SubCategoryId, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 }
 
-                @if (financialOperation.IsIncome || financialOperation.IsTransfer)
+                @if (financialOp.IsIncome || financialOp.IsTransfer)
                 {
                     <div class="form-group label-category">
-                        @Html.LabelFor(model => model.FinancialOperation.TargetBankAccountId, "Target account", htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.LabelFor(model => financialOp.TargetBankAccountId, "Target account", htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.DropDownListFor(model => model.FinancialOperation.TargetBankAccountId, Model.SelectListOfBankAccounts, htmlAttributes: new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.FinancialOperation.TargetBankAccountId, "", new { @class = "text-danger" })
+                            @Html.DropDownListFor(model => financialOp.TargetBankAccountId, Model.SelectListOfBankAccounts, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => financialOp.TargetBankAccountId, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 }
 
                 <div class="form-group label-category">
-                    @Html.LabelFor(model => model.FinancialOperation.DateTime, "Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => financialOp.DateTime, "Date", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.FinancialOperation.DateTime, new { htmlAttributes = new { @class = "form-control datepicker ", @Value = @DateTime.Now.ToShortDateString() } })
-                        @Html.ValidationMessageFor(model => model.FinancialOperation.DateTime, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => financialOp.DateTime, new { htmlAttributes = new { @class = "form-control datepicker ", @Value = @DateTime.Now.ToShortDateString() } })
+                        @Html.ValidationMessageFor(model => financialOp.DateTime, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
                 <div class="form-group label-category">
-                    @Html.LabelFor(model => model.FinancialOperation.Note, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => financialOp.Note, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.FinancialOperation.Note, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.FinancialOperation.Note, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => financialOp.Note, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => financialOp.Note, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
@@ -111,50 +111,57 @@
             </div>
         }
     </div>
-    @if (!Model.FinancialOperation.IsTransfer)
+    @if (!financialOp.IsTransfer)
     {
-    <div class="category-inside category-inside2">
-        
-        <div class="form-body">
-            <div id="jstree">
+        <div class="category-inside category-inside2">
 
-                @(Html.TreeView(Model.ListOfCategories)
-                                            .EmptyContent(Model.FinancialOperation.IsExpense ? "Expense Categories" : "Income Categories")
-                                            .Children(m => m.Subcategories)
-                                            .HtmlAttributes(new { id = "tree" })
-                                            .ChildrenHtmlAttributes(new { @class = "subItem" })
-                                            .ItemText(m => m.CategoryName)
-                                            .ItemTemplate(
-                                                    @<text>
-                                                        <a href="@item.CategoryName" desc="@item.CategoryName" data-category-id=@item.Id> @item.CategoryName</a>
-                                                        @Html.ActionLink("Edit", "Edit","", new { id = item.Id },null) |                                                        
-                                                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                                                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            <div class="form-body">
+                <div id="jstree">
 
-                                                    </text> )
-                )
+                    @(Html.TreeView(Model.ListOfCategories)
+                                                        .EmptyContent(financialOp.IsExpense ? "Expense Categories" : "Income Categories")
+                                                        .Children(m => m.Subcategories)
+                                                        .HtmlAttributes(new { id = "tree" })
+                                                        .ChildrenHtmlAttributes(new { @class = "subItem" })
+                                                        .ItemText(m => m.CategoryName)
+                                                        .ItemTemplate(
+                                                                @<text>
+                                                                    <div class="category-links">
+                                                                        <div class="category-link">
+                                                                            <a class="@(item.ParentCategoryId==null?"parent-category":"child-category")" href="@item.CategoryName" desc="@item.CategoryName" data-category-id=@item.Id> @item.CategoryName</a>
+                                                                        </div>
+                                                                        <div class="category-editlink ">
+                                                                            @Html.ActionLink("Edit", "Edit", "SubCategories", new {id = item.Id}, null) |
+                                                                            @Html.ActionLink("Details", "Details", "SubCategories", new {id = item.Id}) |
+                                                                            @Html.ActionLink("Delete", "Delete", "SubCategories", new {id = item.Id})
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                </text> )
+                    )
+                </div>
             </div>
-        </div>
-        <div class="buttons">          
-            <button class="btn btn-default">@Html.ActionLink("Create new Category", Model.FinancialOperation.IsExpense ? "CreateExpenseCategory" : "CreateIncomeCategory", "Categories")</button>
-            <button class="btn btn-default">@Html.ActionLink("Create new Subcategory", Model.FinancialOperation.IsExpense ? "CreateExpenseSubCategory" : "CreateIncomeSubCategory", "Subcategories")</button>
+            <div class="buttons">
+                <button class="btn btn-default">@Html.ActionLink("Create new Category", financialOp.IsExpense ? "CreateExpenseCategory" : "CreateIncomeCategory", "Categories")</button>
+                <button class="btn btn-default">@Html.ActionLink("Create new Subcategory", financialOp.IsExpense ? "CreateExpenseSubCategory" : "CreateIncomeSubCategory", "Subcategories")</button>
+
+            </div>
 
         </div>
-
-    </div>
     }
 
 </div>
 <h3>
-    @if (financialOperation.IsExpense)
+    @if (financialOp.IsExpense)
     {
         @Html.DisplayName("List of Expenses")
     }
-    @if (financialOperation.IsIncome)
+    @if (financialOp.IsIncome)
     {
         @Html.DisplayName("List of Incomes")
     }
-    @if (financialOperation.IsTransfer)
+    @if (financialOp.IsTransfer)
     {
         @Html.DisplayName("List of Transfers")
     }
@@ -164,15 +171,15 @@
 <table class="table">
     <tr>
         <th>
-            @if (financialOperation.IsExpense)
+            @if (financialOp.IsExpense)
             {
                 @Html.DisplayName("Source Account")
             }
-            @if (financialOperation.IsIncome)
+            @if (financialOp.IsIncome)
             {
                 @Html.DisplayName("Target Account")
             }
-            @if (financialOperation.IsTransfer)
+            @if (financialOp.IsTransfer)
             {
                 @Html.DisplayName("Source Account")
             }
@@ -182,13 +189,13 @@
             @Html.DisplayName("Amount")
         </th>
 
-        @if (financialOperation.IsExpense)
+        @if (financialOp.IsExpense)
         {
             <th>
                 @Html.DisplayName("Expense Category")
             </th>
         }
-        @if (financialOperation.IsIncome)
+        @if (financialOp.IsIncome)
         {
             <th>
                 @Html.DisplayName("Income Category")
@@ -196,15 +203,15 @@
         }
 
         <th>
-            @if (financialOperation.IsExpense)
+            @if (financialOp.IsExpense)
             {
                 @Html.DisplayName("Expense SubCategory")
             }
-            @if (financialOperation.IsIncome)
+            @if (financialOp.IsIncome)
             {
                 @Html.DisplayName("Income SubCategory")
             }
-            @if (financialOperation.IsTransfer)
+            @if (financialOp.IsTransfer)
             {
                 @Html.DisplayName("Target Account")
             }
@@ -212,10 +219,10 @@
         </th>
 
         <th>
-            @Html.DisplayNameFor(model => model.FinancialOperation.DateTime)
+            @Html.DisplayNameFor(model => financialOp.DateTime)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FinancialOperation.Note)
+            @Html.DisplayNameFor(model => financialOp.Note)
         </th>
 
         <th></th>
@@ -224,7 +231,7 @@
     @foreach (var item in Model.ListOfFinancialOperations)
     {
         <tr>
-            @if (financialOperation.IsIncome)
+            @if (financialOp.IsIncome)
             {
 
                 <td>
@@ -303,18 +310,18 @@
                         "icon": "fa fa-file icon-state-warning icon-lg"
                     }
                 },
-                "plugins": [ "state", "types", "sort"]
+                "plugins": ["state", "types", "sort"]
             });
         });
     </script>
 
     <script>
         $(document).ready(function () {
-          
+
             $(".jstree-last").click(function (e) {
-                //debugger;
-                var link = $(e.target);                
-                
+              //  debugger;
+                var link = $(e.target);
+              //  if(link.$items.)
                 var categoryHolder = $(".subcategory-holder");
                 categoryHolder.val(link.attr("data-category-id"))
             });

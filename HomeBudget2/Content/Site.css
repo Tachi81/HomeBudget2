@@ -61,3 +61,36 @@ textarea {
 .label-category{
     width:100%;
 }
+
+ /* Overwrite tree.js.css*/
+.category-links {
+    display:inline-flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: stretch;
+    width: 30rem;
+}
+
+.category-inside .jstree-default .jstree-clicked , .category-inside .jstree-default .jstree-hovered {
+     background-color: transparent;   
+}
+
+    .category-inside .jstree-default .jstree-clicked .category-link {
+        background: #beebff;
+        border-radius: 2px;
+        box-shadow: inset 0 0 1px #999;
+    }
+
+.category-inside .jstree-default .jstree-hovered .category-link {
+    background: #e7f4e9;
+    border-radius: 2px;
+    box-shadow: inset 0 0 1px #999;
+}
+
+.category-link a, .category-editlink a{
+    color: black;
+}
+
+.category-editlink a {
+    font-size: 1.2rem;
+}
