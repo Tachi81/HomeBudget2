@@ -106,7 +106,8 @@ namespace HomeBudget2.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            financialOperationVm.FinancialOperation.UserId = financialOperationVm.UserId = userId;
+            financialOperationVm.FinancialOperation.UserId = userId;
+            financialOperationVm.UserId = userId;
 
             if (ModelState.IsValid)
             {
