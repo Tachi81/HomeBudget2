@@ -123,7 +123,7 @@ namespace HomeBudget2.Controllers
                 {
                     _unitOfWork.FinancialOperatiosRepo.Create(financialOperationVm.FinancialOperation);
 
-                    _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
+                    _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId, financialOperationVm.FinancialOperation);
                     _unitOfWork.Complete();
                     return RedirectToAction(_unitOfWork.FinancialOperationService.ChooseActionToGo(financialOperationVm));
                 }
@@ -171,7 +171,7 @@ namespace HomeBudget2.Controllers
 
                 _unitOfWork.FinancialOperatiosRepo.Update(financialOperationVm.FinancialOperation);
 
-                _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
+                _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId, financialOperationVm.FinancialOperation);
                 _unitOfWork.Complete();
                 return RedirectToAction(_unitOfWork.FinancialOperationService.ChooseActionToGo(financialOperationVm));
             }
@@ -203,12 +203,18 @@ namespace HomeBudget2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            FinancialOperationViewModel financialOperationVm = new FinancialOperationViewModel();
-            financialOperationVm.FinancialOperation =
-                _unitOfWork.FinancialOperatiosRepo.GetWhere(fo => fo.Id == id).FirstOrDefault();
+            FinancialOperationViewModel financialOperationVm =
+                new FinancialOperationViewModel
+                {
+                    FinancialOperation = _unitOfWork.FinancialOperatiosRepo
+                        .GetWhereWithIncludes(fo => fo.Id == id)
+                        .FirstOrDefault()
+                };
             _unitOfWork.FinancialOperatiosRepo.Delete(financialOperationVm.FinancialOperation);
 
             var userId = User.Identity.GetUserId();
+            _unitOfWork.Complete();
+
             _unitOfWork.BankAccountLogic.CalculateBalanceOfAllAccountsAndUpdateThem(userId);
             _unitOfWork.Complete();
             return RedirectToAction(_unitOfWork.FinancialOperationService.ChooseActionToGo(financialOperationVm));

@@ -13,7 +13,7 @@ namespace HomeBudget2.BusinessLogic
                         _unitOfWork = unitOfWork;
         }
 
-        public void CalculateBalanceOfAllAccountsAndUpdateThem(string userId)
+        public void CalculateBalanceOfAllAccountsAndUpdateThem(string userId, FinancialOperation finOperation = null)
         {
             var bankAccountList = _unitOfWork.BankAccountRepo.GetWhereWithIncludes(x => x.Id > 0 && x.UserId == userId).ToList();
             foreach (var bankAccount in bankAccountList)
@@ -21,9 +21,17 @@ namespace HomeBudget2.BusinessLogic
                 var sumOfExpenses = _unitOfWork.FinancialOperatiosRepo.
                     GetWhere(financialOperation => financialOperation.BankAccountId == bankAccount.Id && financialOperation.UserId == userId)
                     .Sum(e => e.AmountOfMoney);
+                if (finOperation?.BankAccount?.Id == bankAccount.Id)
+                {
+                    sumOfExpenses += finOperation.AmountOfMoney;
+                }
                 var sumOfIncomes = _unitOfWork.FinancialOperatiosRepo
                     .GetWhere(financialOperation => financialOperation.TargetBankAccountId == bankAccount.Id && financialOperation.UserId == userId)
                     .Sum(e => e.AmountOfMoney);
+                if (finOperation?.TargetBankAccount?.Id == bankAccount.Id)
+                {
+                    sumOfIncomes += finOperation.AmountOfMoney;
+                }
 
                 bankAccount.Balance = bankAccount.InitialBalance - sumOfExpenses + sumOfIncomes;
                 _unitOfWork.BankAccountRepo.Update(bankAccount);               
