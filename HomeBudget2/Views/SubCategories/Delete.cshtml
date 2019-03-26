@@ -17,7 +17,7 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.SubCategory.ParentCategory.CategoryName)
+            @Html.LabelFor(model => model.SubCategory.ParentCategory.CategoryName, "Category")
         </dt>
 
         <dd>
@@ -25,7 +25,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.SubCategory.CategoryName)
+            @Html.LabelFor(model => model.SubCategory.CategoryName, "Subcategory")
         </dt>
 
         <dd>
@@ -33,7 +33,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.SubCategory.IsExpense)
+            @Html.LabelFor(model => model.SubCategory.IsExpense)
         </dt>
 
         <dd>
@@ -41,7 +41,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.SubCategory.IsIncome)
+            @Html.LabelFor(model => model.SubCategory.IsIncome)
         </dt>
 
         <dd>

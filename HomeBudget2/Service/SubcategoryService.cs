@@ -93,7 +93,8 @@ namespace HomeBudget2.Service
         {
             var categories = _unitOfWork.CategoryRepo.GetWhere(category => category.Id > 0
                                                                       && category.UserId == userId
-                                                                      &&  category.IsExpense == subCategoryVm.SubCategory.IsExpense );
+                                                                      &&  category.IsExpense == subCategoryVm.SubCategory.IsExpense
+                                                                      && category.ParentCategoryId == null);
             subCategoryVm.SelectListOfCategories = new SelectList(categories, "Id", "CategoryName");
         }
 

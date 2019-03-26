@@ -24,7 +24,7 @@
         @Html.HiddenFor(model => model.SubCategory.IsExpense)
         @Html.HiddenFor(model => model.SubCategory.IsIncome)
         <div class="form-group">
-            @Html.LabelFor(model => model.SubCategory.CategoryName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.SubCategory.CategoryName,"Subcategory", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.SubCategory.CategoryName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.SubCategory.CategoryName, "", new { @class = "text-danger" })
