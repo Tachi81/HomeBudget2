@@ -31,7 +31,7 @@ namespace HomeBudget2
                 "~/Scripts/jsTree3/jsTree.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/highCharts").Include(
-                "~/Scripts/code/highcharts.js"));
+                "~/Scripts/HighCharts/highcharts.js"));
 
 
 
